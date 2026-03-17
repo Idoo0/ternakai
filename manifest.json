@@ -1,8 +1,8 @@
 {
-  "name": "TERNAKAI — AI Account Manager",
+  "name": "TERNAKAI — AI Account Vault",
   "short_name": "TERNAKAI",
   "description": "Your personal AI account vault. Local-first, private, no backend.",
-  "start_url": "index.html",
+  "start_url": "./app/index.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
@@ -12,32 +12,40 @@
   "categories": ["productivity", "utilities"],
   "icons": [
     {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
       "purpose": "any"
     },
     {
       "src": "icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "maskable"
+      "purpose": "any"
     }
   ],
   "shortcuts": [
     {
       "name": "Add Account",
-      "short_name": "Add Acc",
-      "description": "Quickly add a new AI account",
-      "url": "index.html#accounts",
-      "icons": [{ "src": "icon.svg", "sizes": "any" }]
+      "url": "./app/index.html#accounts",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "API Keys",
-      "short_name": "API Keys",
-      "description": "View your API keys",
-      "url": "index.html#apikeys",
-      "icons": [{ "src": "icon.svg", "sizes": "any" }]
+      "url": "./app/index.html#apikeys",
+      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

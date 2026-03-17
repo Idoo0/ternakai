@@ -1,98 +1,88 @@
 /* ═══════════════════════════════════════════════════════════
-   TERNAKAI — Service Worker v4
-   Strategy: Cache-first for static assets, network-first for API
+   TERNAKAI v4 — sw.js  (lives at repo root)
+   Scope covers the entire site including /app/
 ═══════════════════════════════════════════════════════════ */
 'use strict';
 
-const CACHE_NAME   = 'ternakai-v4.0';
-const OFFLINE_PAGE = 'index.html';
-
-const PRECACHE_ASSETS = [
-  'index.html',
-  'manifest.json',
-  'icon.svg',
-  // CDN assets cached at runtime on first request
+const CACHE  = 'ternakai-v4.1';
+const SHELL  = [
+  './app/index.html',
+  './app/styles.css',
+  './app/script.js',
+  './manifest.json',
+  './icon.svg',
+  './icon-192.png',
+  './icon-512.png',
+  './apple-touch-icon.png',
 ];
 
-/* ── Install: pre-cache shell ── */
-self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(PRECACHE_ASSETS))
-      .catch(() => { /* graceful: some assets may not exist yet */ })
+/* ── Install ── */
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE)
+      .then(c => c.addAll(SHELL).catch(() => {}))
       .finally(() => self.skipWaiting())
   );
 });
 
 /* ── Activate: purge old caches ── */
-self.addEventListener('activate', event => {
-  event.waitUntil(
+self.addEventListener('activate', e => {
+  e.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(
-        keys
-          .filter(k => k !== CACHE_NAME)
-          .map(k => caches.delete(k))
-      ))
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
       .then(() => self.clients.claim())
   );
 });
 
-/* ── Fetch: stale-while-revalidate for same-origin, cache-first for CDN ── */
-self.addEventListener('fetch', event => {
-  const { request } = event;
-
-  // Only handle GET requests
+/* ── Fetch strategy ── */
+self.addEventListener('fetch', e => {
+  const { request } = e;
   if (request.method !== 'GET') return;
-
-  // Skip chrome-extension, data, and non-http(s) schemes
   if (!request.url.startsWith('http')) return;
 
-  // Network-first for Anthropic API (never cache sensitive calls)
+  // Never cache Anthropic API or RSS calls
   if (request.url.includes('api.anthropic.com') || request.url.includes('rss2json.com')) {
-    event.respondWith(
+    e.respondWith(
       fetch(request).catch(() =>
-        new Response(JSON.stringify({ error: 'offline' }), {
-          headers: { 'Content-Type': 'application/json' }
+        new Response(JSON.stringify({ error:'offline' }), {
+          headers:{ 'Content-Type':'application/json' }
         })
       )
     );
     return;
   }
 
-  // Cache-first for CDN (fonts, icons, libs)
+  // Cache-first for CDN (fonts, icons, lib JS)
   if (
     request.url.includes('fonts.googleapis.com') ||
     request.url.includes('fonts.gstatic.com')    ||
     request.url.includes('cdnjs.cloudflare.com') ||
     request.url.includes('cdn.jsdelivr.net')      ||
-    request.url.includes('www.google.com/s2/favicons')
+    request.url.includes('google.com/s2/favicons')
   ) {
-    event.respondWith(
-      caches.match(request).then(cached => {
-        if (cached) return cached;
-        return fetch(request).then(response => {
-          if (!response || response.status !== 200) return response;
-          const clone = response.clone();
-          caches.open(CACHE_NAME).then(c => c.put(request, clone));
-          return response;
-        }).catch(() => cached || new Response('', { status: 503 }));
+    e.respondWith(
+      caches.match(request).then(hit => {
+        if (hit) return hit;
+        return fetch(request).then(res => {
+          if (res && res.status === 200) {
+            caches.open(CACHE).then(c => c.put(request, res.clone()));
+          }
+          return res;
+        }).catch(() => new Response('', { status:503 }));
       })
     );
     return;
   }
 
-  // Stale-while-revalidate for same-origin assets
-  event.respondWith(
-    caches.open(CACHE_NAME).then(cache =>
+  // Stale-while-revalidate for same-origin (app shell)
+  e.respondWith(
+    caches.open(CACHE).then(cache =>
       cache.match(request).then(cached => {
-        const fetchPromise = fetch(request).then(response => {
-          if (response && response.status === 200) {
-            cache.put(request, response.clone());
-          }
-          return response;
+        const fetched = fetch(request).then(res => {
+          if (res && res.status === 200) cache.put(request, res.clone());
+          return res;
         }).catch(() => null);
-
-        return cached || fetchPromise || caches.match(OFFLINE_PAGE);
+        return cached || fetched || caches.match('./app/index.html');
       })
     )
   );
