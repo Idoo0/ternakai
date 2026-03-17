@@ -1,0 +1,43 @@
+{
+  "name": "TERNAKAI — AI Account Manager",
+  "short_name": "TERNAKAI",
+  "description": "Your personal AI account vault. Local-first, private, no backend.",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#05090f",
+  "theme_color": "#00d4aa",
+  "lang": "id",
+  "categories": ["productivity", "utilities"],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Add Account",
+      "short_name": "Add Acc",
+      "description": "Quickly add a new AI account",
+      "url": "index.html#accounts",
+      "icons": [{ "src": "icon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "API Keys",
+      "short_name": "API Keys",
+      "description": "View your API keys",
+      "url": "index.html#apikeys",
+      "icons": [{ "src": "icon.svg", "sizes": "any" }]
+    }
+  ]
+}

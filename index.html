@@ -1,0 +1,2288 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="TERNAKAI — AI Account Manager. Local-first, no backend.">
+<meta name="theme-color" content="#00d4aa">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="TERNAKAI">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;800;900&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<title>TERNAKAI — AI Vault</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+/* ═══ THEME TOKENS ═══ */
+:root{--mint:#00d4aa;--mint2:#00b891;--mint-dim:rgba(0,212,170,.11);--mint-border:rgba(0,212,170,.22);--violet:#8b5cf6;--r:14px}
+[data-theme="dark"]{--bg:#05090f;--bg2:#07111f;--card:#0c1728;--card2:#101f35;--border:#16283f;--border2:#1e354f;--text:#e2e8f0;--text2:#94a3b8;--text3:#475569;--sh:rgba(0,0,0,.6);--grid:rgba(0,212,170,.022);--nav:rgba(5,9,15,.88)}
+[data-theme="light"]{--bg:#eef2f7;--bg2:#ffffff;--card:#ffffff;--card2:#f1f5f9;--border:#dde3ec;--border2:#c5d0de;--text:#0f172a;--text2:#334155;--text3:#64748b;--sh:rgba(15,23,42,.1);--grid:rgba(5,150,105,.028);--nav:rgba(238,242,247,.92);--mint:#059669;--mint2:#047857;--mint-dim:rgba(5,150,105,.09);--mint-border:rgba(5,150,105,.2)}
+
+/* ═══ BASE ═══ */
+html{height:100%}
+body{font-family:'Figtree',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;transition:background .3s,color .3s}
+h1,h2,h3,h4,h5{font-family:'Exo 2',sans-serif}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
+nav,main,#screen-onboarding{position:relative;z-index:1}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+/* ═══ ONBOARDING SCREEN ═══ */
+#screen-onboarding{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px}
+.ob-wrap{width:100%;max-width:460px;animation:fadeUp .5s cubic-bezier(.16,1,.3,1)}
+.ob-logo{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:10px}
+.ob-logo-mark{width:48px;height:48px;border-radius:14px;background:linear-gradient(135deg,var(--mint),var(--violet));display:flex;align-items:center;justify-content:center}
+.ob-logo-text{font-size:28px;font-weight:900;letter-spacing:-.04em}
+.ob-logo-text em{color:var(--mint);font-style:normal}
+.ob-tagline{text-align:center;font-size:14px;color:var(--text3);margin-bottom:28px}
+.ob-badges{display:flex;justify-content:center;gap:8px;margin-bottom:32px;flex-wrap:wrap}
+.ob-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;border:1px solid var(--border2);font-size:11px;font-weight:700;color:var(--text3);background:var(--card2);font-family:'JetBrains Mono',monospace}
+.ob-divider{border:none;border-top:1px solid var(--border);margin:22px 0}
+.ob-btn{width:100%;padding:18px 24px;border-radius:14px;border:none;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:15px;font-weight:800;display:flex;align-items:center;gap:14px;transition:all .2s;margin-bottom:12px;letter-spacing:.01em}
+.ob-btn-primary{background:linear-gradient(135deg,var(--mint),var(--mint2));color:#030f0a;box-shadow:0 6px 28px rgba(0,212,170,.25)}
+[data-theme="light"] .ob-btn-primary{color:#fff}
+.ob-btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 34px rgba(0,212,170,.35)}
+.ob-btn-secondary{background:var(--card);color:var(--text2);border:1px solid var(--border2)}
+.ob-btn-secondary:hover{border-color:var(--mint-border);color:var(--mint);background:var(--mint-dim)}
+.ob-btn-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px}
+.ob-btn-primary .ob-btn-icon{background:rgba(0,0,0,.15)}
+.ob-btn-secondary .ob-btn-icon{background:var(--card2);border:1px solid var(--border)}
+.ob-btn-text{text-align:left;flex:1}
+.ob-btn-title{display:block;font-size:15px;font-weight:800}
+.ob-btn-sub{display:block;font-size:11px;font-weight:500;opacity:.7;margin-top:2px}
+.ob-howto{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-top:8px}
+.ob-howto h4{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;font-family:'JetBrains Mono',monospace;margin-bottom:12px}
+.ob-step{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:12px;color:var(--text3)}
+.ob-step:last-child{margin-bottom:0}
+.ob-step-n{width:20px;height:20px;border-radius:6px;background:var(--mint-dim);border:1px solid var(--mint-border);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:var(--mint);flex-shrink:0;font-family:'JetBrains Mono',monospace}
+
+/* ═══ NAV ═══ */
+nav{position:sticky;top:0;z-index:50;background:var(--nav);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1400px;margin:0 auto;padding:0 24px;height:62px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--mint),var(--violet));display:flex;align-items:center;justify-content:center}
+.logo-text{font-size:17px;font-weight:900;letter-spacing:-.03em;white-space:nowrap}
+.logo-text em{color:var(--mint);font-style:normal}
+.nav-tabs{display:flex;align-items:center;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:4px;gap:2px;flex-shrink:0}
+.nav-btn{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:600;font-family:'Figtree',sans-serif;color:var(--text3);cursor:pointer;border:none;transition:all .2s;display:flex;align-items:center;gap:6px;background:transparent;white-space:nowrap}
+.nav-btn:hover{color:var(--text2)}
+.nav-btn.active{background:var(--mint-dim);color:var(--mint);border:1px solid var(--mint-border)}
+.nav-badge{min-width:17px;height:17px;border-radius:9px;background:var(--mint);color:#030f0a;font-size:9px;font-weight:800;padding:0 4px;display:inline-flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace}
+.nav-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.ctrl-btn{height:32px;padding:0 11px;border-radius:8px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;font-size:12px;font-family:'Figtree',sans-serif;font-weight:600;transition:all .2s;display:flex;align-items:center;gap:5px}
+.ctrl-btn:hover{color:var(--text2);border-color:var(--border2)}
+.ctrl-btn.on{color:var(--mint);border-color:var(--mint-border);background:var(--mint-dim)}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:pulse 2s infinite;flex-shrink:0}
+.live-clock{font-size:11px;color:var(--text3);font-family:'JetBrains Mono',monospace;white-space:nowrap}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,212,170,.5)}50%{box-shadow:0 0 0 6px rgba(0,212,170,0)}}
+
+/* ═══ MAIN / VIEWS ═══ */
+main{flex:1;max-width:1400px;margin:0 auto;width:100%;padding:34px 24px 70px}
+.view{display:none}.view.active{display:block}
+
+/* ═══ STAT CARDS ═══ */
+.stat-card{padding:26px 24px 22px;display:flex;flex-direction:column;min-height:130px}
+.stat-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:18px;flex-shrink:0}
+.stat-num{font-size:38px;font-weight:900;font-family:'Exo 2',sans-serif;line-height:1;letter-spacing:-.03em}
+.stat-label{font-size:12px;color:var(--text3);margin-top:7px;font-weight:600;text-transform:uppercase;letter-spacing:.07em}
+
+/* ═══ COMPONENTS ═══ */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);transition:border-color .2s}
+.card:hover{border-color:var(--border2)}
+.btn-primary{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;border-radius:10px;border:none;cursor:pointer;font-family:'Exo 2',sans-serif;font-size:13px;font-weight:700;background:linear-gradient(135deg,var(--mint),var(--mint2));color:#030f0a;box-shadow:0 4px 18px rgba(0,212,170,.22);transition:transform .15s,box-shadow .15s;white-space:nowrap}
+[data-theme="light"] .btn-primary{color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 7px 24px rgba(0,212,170,.3)}
+.btn-ghost{display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:9px;cursor:pointer;font-family:'Figtree',sans-serif;font-size:13px;font-weight:600;background:transparent;color:var(--text3);border:1px solid var(--border);transition:all .2s;white-space:nowrap}
+.btn-ghost:hover{color:var(--text2);border-color:var(--border2)}
+.btn-icon{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .2s;flex-shrink:0}
+.btn-icon:hover{color:var(--text2);border-color:var(--border2)}
+.btn-icon.danger:hover{border-color:rgba(239,68,68,.35);color:#f87171}
+.btn-icon.pin-on{color:#fbbf24;border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.06)}
+.inp{width:100%;padding:11px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:10px;color:var(--text);font-size:14px;font-family:'Figtree',sans-serif;outline:none;transition:border-color .2s}
+.inp:focus{border-color:var(--mint)}
+.inp::placeholder{color:var(--text3)}
+select.inp option{background:var(--card)}
+.inp-mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+.sec-tag{font-size:10px;color:var(--mint);font-family:'JetBrains Mono',monospace;font-weight:600;text-transform:uppercase;letter-spacing:.12em;margin-bottom:5px}
+.sec-title{font-size:26px;font-weight:800;letter-spacing:-.02em}
+.grad{background:linear-gradient(135deg,var(--mint) 0%,#a78bfa 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ═══ BADGES ═══ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:7px;border:1px solid;font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace}
+.badge img{width:12px;height:12px;border-radius:3px}
+.b-free{background:rgba(100,116,139,.1);color:#94a3b8;border-color:rgba(100,116,139,.25)}
+.b-plus{background:rgba(139,92,246,.1);color:#a78bfa;border-color:rgba(139,92,246,.25)}
+.b-pro{background:rgba(245,158,11,.1);color:#fbbf24;border-color:rgba(245,158,11,.25)}
+.b-active{background:rgba(0,212,170,.1);color:var(--mint);border-color:var(--mint-border)}
+.b-limit{background:rgba(249,115,22,.1);color:#fb923c;border-color:rgba(249,115,22,.25)}
+.b-banned{background:rgba(239,68,68,.1);color:#f87171;border-color:rgba(239,68,68,.25)}
+
+/* ═══ SECRET BLUR ═══ */
+.secret-wrap{display:inline-flex;align-items:center;gap:5px}
+.secret-text{font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text3);background:var(--bg2);border:1px solid var(--border);padding:4px 10px;border-radius:7px;filter:blur(5px);transition:filter .3s;user-select:none;cursor:default;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.secret-wrap:hover .secret-text{filter:blur(0)}
+.secret-copy{opacity:0;transition:opacity .2s;width:26px;height:26px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0}
+.secret-copy:hover{color:var(--mint);border-color:var(--mint-border)}
+.secret-wrap:hover .secret-copy{opacity:1}
+
+/* ═══ MODEL TAG ═══ */
+.model-tag{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:8px;border:1px solid;font-size:11px;font-weight:700;margin:2px;font-family:'JetBrains Mono',monospace}
+.model-tag img{width:14px;height:14px;border-radius:3px}
+
+/* ═══ TABLE ═══ */
+.tbl-wrap{overflow-x:auto;border-radius:var(--r)}
+table{width:100%;border-collapse:collapse}
+thead tr{background:var(--card2)}
+thead th{padding:15px 24px;font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;font-weight:700;text-align:left;white-space:nowrap}
+tbody tr{border-top:1px solid var(--border);transition:background .15s}
+tbody tr:hover{background:var(--card2)}
+tbody td{padding:20px 24px;vertical-align:top;font-size:14px}
+.tr-pinned{background:rgba(251,191,36,.04)!important}
+
+/* ═══ FAMILY PICKER ═══ */
+.cat-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.cat-tab{padding:5px 12px;border-radius:20px;border:1px solid var(--border);font-size:11px;font-weight:700;font-family:'Figtree',sans-serif;color:var(--text3);cursor:pointer;background:transparent;transition:all .2s;display:flex;align-items:center;gap:5px}
+.cat-tab:hover{color:var(--text2);border-color:var(--border2)}
+.cat-tab.sel{background:var(--mint-dim);color:var(--mint);border-color:var(--mint-border)}
+.family-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}
+.family-card{background:var(--bg2);border:2px solid var(--border);border-radius:11px;padding:12px 5px;text-align:center;cursor:pointer;transition:all .2s}
+.family-card:hover{border-color:var(--border2);transform:translateY(-1px)}
+.family-card.sel{border-color:var(--mint);background:var(--mint-dim)}
+.family-card img{width:26px;height:26px;border-radius:6px;margin:0 auto 6px;display:block;object-fit:contain}
+.fam-icon{width:26px;height:26px;border-radius:6px;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.fam-name{font-size:9px;font-weight:700;color:var(--text2);line-height:1.3;word-break:break-word}
+
+/* ═══ SUB & STATUS PICKERS ═══ */
+.sub-btns,.status-btns{display:flex;gap:8px}
+.sub-btn,.status-btn{flex:1;padding:10px;border-radius:10px;border:2px solid var(--border);font-size:12px;font-weight:700;font-family:'Exo 2',sans-serif;color:var(--text3);background:transparent;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:5px;text-transform:uppercase;letter-spacing:.05em}
+.sub-free{border-color:#64748b!important;color:#94a3b8!important;background:rgba(100,116,139,.07)!important}
+.sub-plus{border-color:#8b5cf6!important;color:#a78bfa!important;background:rgba(139,92,246,.07)!important}
+.sub-pro{border-color:#f59e0b!important;color:#fbbf24!important;background:rgba(245,158,11,.07)!important}
+.st-active{border-color:var(--mint)!important;color:var(--mint)!important;background:var(--mint-dim)!important}
+.st-limit{border-color:#f97316!important;color:#fb923c!important;background:rgba(249,115,22,.07)!important}
+.st-banned{border-color:#ef4444!important;color:#f87171!important;background:rgba(239,68,68,.07)!important}
+
+/* ═══ MODAL ═══ */
+.modal-wrap{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-wrap.open{display:flex}
+.modal-bg{position:absolute;inset:0;background:rgba(5,9,15,.75);backdrop-filter:blur(10px)}
+.modal-box{position:relative;width:100%;background:var(--card);border:1px solid var(--border2);border-radius:20px;overflow:hidden;max-height:92vh;overflow-y:auto;z-index:1;box-shadow:0 28px 70px var(--sh)}
+.modal-head{position:sticky;top:0;z-index:10;background:var(--card);border-bottom:1px solid var(--border);padding:22px 28px;display:flex;align-items:center;justify-content:space-between}
+.modal-body{padding:28px}
+.modal-title{font-size:18px;font-weight:800}
+.modal-sub{font-size:12px;color:var(--text3);margin-top:3px}
+.modal-close{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+.modal-close:hover{border-color:rgba(239,68,68,.35);color:#f87171}
+.form-sec{margin-bottom:24px}
+.form-sec-lbl{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:14px}
+.form-lbl{display:block;font-size:13px;font-weight:600;color:var(--text2);margin-bottom:7px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-footer{border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:flex-end;gap:10px;margin-top:6px}
+.sep{border:none;border-top:1px solid var(--border);margin:22px 0}
+
+/* ═══ API KEY CARDS ═══ */
+.apikey-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px}
+.key-box{display:flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--border);border-radius:9px;padding:11px 14px;margin:12px 0}
+.key-box code{flex:1;font-size:11px;color:var(--text2);font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;filter:blur(4px);transition:filter .3s;cursor:default}
+.key-box:hover code{filter:blur(0)}
+.key-copy-btn{flex-shrink:0;background:none;border:none;cursor:pointer;color:var(--text3);font-size:13px;transition:color .2s;padding:2px}
+.key-copy-btn:hover{color:var(--mint)}
+
+/* ═══ SEARCH ═══ */
+.search-wrap{position:relative}
+.search-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:12px;pointer-events:none}
+.search-wrap input{padding-left:36px}
+
+/* ═══ NEWS / TIPS ═══ */
+.news-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:16px;transition:border-color .2s,transform .2s}
+.news-card:hover{border-color:var(--border2);transform:translateY(-2px)}
+.news-title{font-size:13px;font-weight:700;line-height:1.55;color:var(--text);transition:color .2s;display:block;text-decoration:none}
+.news-title:hover{color:var(--mint)}
+.news-src{font-size:9px;color:var(--mint);font-family:'JetBrains Mono',monospace;font-weight:700;text-transform:uppercase;letter-spacing:.08em}
+.news-date{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace}
+.tip-card{background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:16px;transition:border-color .2s,transform .2s}
+.tip-card:hover{border-color:var(--mint-border);transform:translateY(-2px)}
+
+/* ═══ PROGRESS ═══ */
+.prog-bar{height:4px;border-radius:4px;background:var(--border);overflow:hidden;margin-top:6px}
+.prog-fill{height:100%;border-radius:4px;transition:width .5s cubic-bezier(.16,1,.3,1)}
+
+/* ═══ SHIMMER ═══ */
+.shimmer{background:linear-gradient(90deg,var(--border) 25%,var(--border2) 50%,var(--border) 75%);background-size:200% auto;border-radius:10px;animation:shimmer 1.6s infinite}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+
+/* ═══ ANIMATIONS ═══ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.vu{animation:fadeUp .4s cubic-bezier(.16,1,.3,1) both}
+.d1{animation-delay:.06s}.d2{animation-delay:.12s}.d3{animation-delay:.18s}.d4{animation-delay:.24s}
+
+/* ═══ EMPTY STATE ═══ */
+.empty{text-align:center;padding:80px 20px}
+.empty i{font-size:40px;color:var(--border2);display:block;margin-bottom:16px}
+.empty-title{font-size:15px;font-weight:700;color:var(--text2);margin-bottom:5px}
+.empty p{color:var(--text3);font-size:14px}
+
+/* ═══ SETTINGS ═══ */
+.settings-block{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:26px;margin-bottom:18px}
+.settings-bh{font-size:16px;font-weight:800;margin-bottom:4px}
+.settings-bs{font-size:13px;color:var(--text3);margin-bottom:20px;line-height:1.6}
+.tag-chip{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:700;background:var(--card2);border:1px solid var(--border);color:var(--text3);font-family:'JetBrains Mono',monospace;margin:2px}
+.tag-rm{cursor:pointer;opacity:.6;background:none;border:none;color:inherit;font-size:11px;line-height:1;padding:0}
+.tag-rm:hover{opacity:1;color:#f87171}
+
+/* ═══ PROVIDER GRID (API modal) ═══ */
+.prov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:8px}
+.prov-card{background:var(--bg2);border:2px solid var(--border);border-radius:10px;padding:10px 5px;text-align:center;cursor:pointer;transition:all .2s}
+.prov-card:hover{border-color:var(--border2)}
+.prov-card.sel{border-color:var(--mint);background:var(--mint-dim)}
+.prov-card img{width:22px;height:22px;border-radius:5px;margin:0 auto 5px;display:block;object-fit:contain}
+.prov-icon{width:22px;height:22px;border-radius:5px;margin:0 auto 5px;display:flex;align-items:center;justify-content:center;font-size:12px}
+.prov-card .pn{font-size:9px;font-weight:700;color:var(--text3)}
+
+/* ═══ QR MODAL ═══ */
+#qrDisplay{display:flex;justify-content:center;margin:20px 0}
+#qrDisplay canvas,#qrDisplay img{border-radius:10px;border:3px solid var(--mint-border);box-shadow:0 0 30px rgba(0,212,170,.15)}
+.qr-chunk-nav{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:14px}
+.qr-chunk-info{font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text3)}
+
+/* ═══ ENCRYPT BADGE in settings ═══ */
+.enc-badge{display:inline-flex;align-items:center;gap:5px;padding:5px 11px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(139,92,246,.1);color:#a78bfa;border:1px solid rgba(139,92,246,.25)}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════
+     ONBOARDING SCREEN
+══════════════════════════════════════ -->
+<div id="screen-onboarding">
+  <div class="ob-wrap">
+    <div class="ob-logo">
+      <div class="ob-logo-mark">
+        <i class="fa-solid fa-layer-group" style="color:#fff;font-size:18px"></i>
+      </div>
+      <span class="ob-logo-text">TERNAK<em>AI</em></span>
+    </div>
+    <p class="ob-tagline">Your Personal AI Account Vault</p>
+    <div class="ob-badges">
+      <span class="ob-badge"><i class="fa-solid fa-database" style="color:var(--mint)"></i> IndexedDB</span>
+      <span class="ob-badge"><i class="fa-solid fa-wifi-slash" style="color:#a78bfa"></i> Offline-ready</span>
+      <span class="ob-badge"><i class="fa-solid fa-lock" style="color:#fbbf24"></i> Local-first</span>
+      <span class="ob-badge"><i class="fa-solid fa-mobile-screen" style="color:#fb923c"></i> PWA</span>
+    </div>
+
+    <hr class="ob-divider">
+
+    <button class="ob-btn ob-btn-primary" onclick="App.createNewVault()">
+      <div class="ob-btn-icon"><i class="fa-solid fa-vault"></i></div>
+      <div class="ob-btn-text">
+        <span class="ob-btn-title" data-i18n="ob_new">Create New Vault</span>
+        <span class="ob-btn-sub" data-i18n="ob_new_sub">Start fresh, empty vault</span>
+      </div>
+      <i class="fa-solid fa-arrow-right" style="opacity:.6;margin-left:auto"></i>
+    </button>
+
+    <button class="ob-btn ob-btn-secondary" onclick="document.getElementById('importFileOb').click()">
+      <div class="ob-btn-icon"><i class="fa-solid fa-file-import"></i></div>
+      <div class="ob-btn-text">
+        <span class="ob-btn-title" data-i18n="ob_import">Import cred.json</span>
+        <span class="ob-btn-sub" data-i18n="ob_import_sub">Restore from backup file</span>
+      </div>
+      <i class="fa-solid fa-upload" style="opacity:.4;margin-left:auto"></i>
+    </button>
+    <input type="file" id="importFileOb" accept=".json" style="display:none"
+           onchange="IO.handleFileInput(event,'onboarding')">
+
+    <div class="ob-howto">
+      <h4>How it works</h4>
+      <div class="ob-step"><div class="ob-step-n">1</div>All data stored in IndexedDB — never leaves your device</div>
+      <div class="ob-step"><div class="ob-step-n">2</div>Export as <code style="font-family:'JetBrains Mono',monospace;color:var(--mint);font-size:10px">cred.json</code> to back up or transfer</div>
+      <div class="ob-step"><div class="ob-step-n">3</div>Optional AES-256 encryption for your export file</div>
+      <div class="ob-step"><div class="ob-step-n">4</div>Install as PWA for offline, app-like experience</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     APP SHELL (hidden until DB loaded)
+══════════════════════════════════════ -->
+<div id="screen-app" style="display:none;flex-direction:column;min-height:100vh">
+
+  <!-- ── NAV ── -->
+  <nav>
+    <div class="nav-inner">
+      <div class="logo">
+        <div class="logo-mark"><i class="fa-solid fa-layer-group" style="color:#fff;font-size:13px"></i></div>
+        <span class="logo-text">TERNAK<em>AI</em></span>
+      </div>
+
+      <div class="nav-tabs">
+        <button class="nav-btn active" id="nav-dashboard" onclick="go('dashboard')">
+          <i class="fa-solid fa-chart-line" style="font-size:11px"></i>
+          <span data-i18n="nav_dash">Dashboard</span>
+        </button>
+        <button class="nav-btn" id="nav-accounts" onclick="go('accounts')">
+          <i class="fa-solid fa-users" style="font-size:11px"></i>
+          <span data-i18n="nav_acc">Akun</span>
+          <span class="nav-badge" id="badge-acc">0</span>
+        </button>
+        <button class="nav-btn" id="nav-apikeys" onclick="go('apikeys')">
+          <i class="fa-solid fa-key" style="font-size:11px"></i>
+          <span data-i18n="nav_api">API Keys</span>
+          <span class="nav-badge" id="badge-api">0</span>
+        </button>
+        <button class="nav-btn" id="nav-settings" onclick="go('settings')">
+          <i class="fa-solid fa-gear" style="font-size:11px"></i>
+          <span data-i18n="nav_set">Pengaturan</span>
+        </button>
+      </div>
+
+      <div class="nav-right">
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="live-dot"></div>
+          <span class="live-clock" id="clock">--:--:--</span>
+        </div>
+        <button class="ctrl-btn" id="langBtn" onclick="toggleLang()">
+          <i class="fa-solid fa-language"></i>
+          <span id="langLabel">EN</span>
+        </button>
+        <button class="ctrl-btn" id="themeBtn" onclick="toggleTheme()">
+          <i class="fa-solid fa-moon" id="themeIcon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── MAIN ── -->
+  <main>
+
+    <!-- ═ DASHBOARD ═ -->
+    <div id="view-dashboard" class="view active">
+      <div class="vu" style="margin-bottom:28px">
+        <div class="sec-tag" data-i18n="dash_tag">System Overview</div>
+        <h2 class="sec-title">Selamat datang, <span class="grad">TernakAI</span></h2>
+        <p style="color:var(--text3);margin-top:7px;font-size:14px" data-i18n="dash_sub">Kelola seluruh akun & API key AI kamu dari satu panel.</p>
+      </div>
+
+      <div class="vu d1" style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:26px">
+        <div class="card stat-card">
+          <div class="stat-icon" style="background:rgba(0,212,170,.1)"><i class="fa-solid fa-users" style="color:var(--mint)"></i></div>
+          <div class="stat-num" id="st-total">0</div>
+          <div class="stat-label" data-i18n="stat_total">Total Akun</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon" style="background:rgba(139,92,246,.1)"><i class="fa-solid fa-microchip" style="color:#a78bfa"></i></div>
+          <div class="stat-num" id="st-fam">0</div>
+          <div class="stat-label" data-i18n="stat_fam">AI Families</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon" style="background:rgba(245,158,11,.1)"><i class="fa-solid fa-crown" style="color:#fbbf24"></i></div>
+          <div class="stat-num" id="st-prem">0</div>
+          <div class="stat-label" data-i18n="stat_prem">Premium</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon" style="background:rgba(239,68,68,.1)"><i class="fa-solid fa-triangle-exclamation" style="color:#f87171"></i></div>
+          <div class="stat-num" style="color:#f87171" id="st-lim">0</div>
+          <div class="stat-label" data-i18n="stat_lim">Limit/Suspend</div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-icon" style="background:rgba(99,102,241,.1)"><i class="fa-solid fa-key" style="color:#818cf8"></i></div>
+          <div class="stat-num" id="st-apikeys">0</div>
+          <div class="stat-label" data-i18n="stat_keys">API Keys</div>
+        </div>
+      </div>
+
+      <div class="vu d2" style="display:grid;grid-template-columns:1fr 1fr 280px;gap:18px">
+        <!-- News -->
+        <div class="card" style="padding:22px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:34px;height:34px;border-radius:9px;background:rgba(239,68,68,.1);display:flex;align-items:center;justify-content:center">
+                <i class="fa-solid fa-newspaper" style="color:#f87171;font-size:14px"></i>
+              </div>
+              <div><h3 style="font-size:14px;font-weight:700" data-i18n="news_title">AI News</h3>
+              <p style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px">TechCrunch AI</p></div>
+            </div>
+            <button class="btn-ghost" style="font-size:11px;padding:6px 12px" onclick="loadNews()">
+              <i class="fa-solid fa-rotate-right" id="newsRefreshIcon"></i>
+            </button>
+          </div>
+          <div id="newsContainer" style="display:flex;flex-direction:column;gap:10px">
+            <div class="shimmer" style="height:68px"></div>
+            <div class="shimmer" style="height:68px;margin-top:2px"></div>
+            <div class="shimmer" style="height:58px;margin-top:2px"></div>
+          </div>
+        </div>
+
+        <!-- Tips -->
+        <div class="card" style="padding:22px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:34px;height:34px;border-radius:9px;background:rgba(0,212,170,.1);display:flex;align-items:center;justify-content:center">
+                <i class="fa-solid fa-robot" style="color:var(--mint);font-size:14px"></i>
+              </div>
+              <div><h3 style="font-size:14px;font-weight:700" data-i18n="tips_title">AI Tips</h3>
+              <p style="font-size:9px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-top:2px" data-i18n="powered_by">Powered by Claude</p></div>
+            </div>
+            <button class="btn-ghost" style="font-size:11px;padding:6px 12px" onclick="loadTips()" id="tipsRefreshBtn">
+              <i class="fa-solid fa-rotate-right" id="tipsRefreshIcon"></i>
+            </button>
+          </div>
+          <div id="tipsContainer" style="display:flex;flex-direction:column;gap:10px">
+            <div class="shimmer" style="height:68px"></div>
+            <div class="shimmer" style="height:68px;margin-top:2px"></div>
+            <div class="shimmer" style="height:58px;margin-top:2px"></div>
+          </div>
+        </div>
+
+        <!-- Right column -->
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <div class="card" style="padding:20px;flex:1">
+            <h3 style="font-size:14px;font-weight:700;margin-bottom:16px" data-i18n="breakdown">Family Breakdown</h3>
+            <div id="breakdownList" style="display:flex;flex-direction:column;gap:11px"></div>
+          </div>
+          <div style="border-radius:12px;padding:14px 16px;border:1px solid var(--mint-border);background:var(--mint-dim)">
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <i class="fa-solid fa-database" style="color:var(--mint);font-size:14px;margin-top:2px;flex-shrink:0"></i>
+              <p style="font-size:11px;color:var(--text2);line-height:1.65" data-i18n="sec_notice">
+                Data in <code style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mint)">IndexedDB</code>. Hover to reveal. Export to back up.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═ ACCOUNTS ═ -->
+    <div id="view-accounts" class="view">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px;gap:14px;flex-wrap:wrap">
+        <div><div class="sec-tag" data-i18n="acc_tag">Manajemen Akun</div><h2 class="sec-title" data-i18n="acc_title">AI Accounts</h2></div>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <select id="filterCat" class="inp" style="width:160px;height:40px;font-size:13px" onchange="renderAccounts()"><option value="">All Categories</option></select>
+          <select id="filterStatus" class="inp" style="width:140px;height:40px;font-size:13px" onchange="renderAccounts()">
+            <option value="">All Status</option><option>Active</option><option>Limit</option><option>Banned</option>
+          </select>
+          <div class="search-wrap" style="width:220px">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" id="searchAcc" class="inp" style="height:40px" placeholder="Search..." oninput="renderAccounts()">
+          </div>
+          <button class="btn-primary" onclick="openAddAccount()">
+            <i class="fa-solid fa-plus" style="font-size:11px"></i>
+            <span data-i18n="add_acc">Tambah Akun</span>
+          </button>
+        </div>
+      </div>
+      <div class="card tbl-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:36px"></th>
+              <th data-i18n="th_cred">Kredensial</th>
+              <th data-i18n="th_models">AI Models</th>
+              <th data-i18n="th_status">Status</th>
+              <th data-i18n="th_tags">Tags</th>
+              <th data-i18n="th_desc">Deskripsi</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="accBody"></tbody>
+        </table>
+        <div id="accEmpty" class="empty" style="display:none">
+          <i class="fa-solid fa-users-slash"></i>
+          <div class="empty-title" data-i18n="empty_acc">Belum ada akun</div>
+          <p data-i18n="empty_acc_sub">Klik Tambah Akun untuk memulai</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═ API KEYS ═ -->
+    <div id="view-apikeys" class="view">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px;gap:14px;flex-wrap:wrap">
+        <div><div class="sec-tag" data-i18n="api_tag">API Management</div><h2 class="sec-title" data-i18n="api_title">API Keys</h2></div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="search-wrap" style="width:220px">
+            <i class="fa-solid fa-search"></i>
+            <input type="text" id="searchApi" class="inp" style="height:40px" placeholder="Search..." oninput="renderApiKeys()">
+          </div>
+          <button class="btn-primary" onclick="openAddApi()">
+            <i class="fa-solid fa-plus" style="font-size:11px"></i>
+            <span data-i18n="add_api">Tambah API Key</span>
+          </button>
+        </div>
+      </div>
+      <div id="apiGrid" class="apikey-grid"></div>
+      <div id="apiEmpty" class="empty" style="display:none">
+        <i class="fa-solid fa-key"></i>
+        <div class="empty-title" data-i18n="empty_api">Belum ada API key</div>
+        <p data-i18n="empty_api_sub">Klik Tambah API Key untuk memulai</p>
+      </div>
+    </div>
+
+    <!-- ═ SETTINGS ═ -->
+    <div id="view-settings" class="view">
+      <div style="margin-bottom:26px">
+        <div class="sec-tag" data-i18n="set_tag">Konfigurasi</div>
+        <h2 class="sec-title" data-i18n="set_title">Pengaturan</h2>
+      </div>
+
+      <!-- Appearance -->
+      <div class="settings-block vu">
+        <h3 class="settings-bh" data-i18n="set_appear">Tampilan</h3>
+        <p class="settings-bs" data-i18n="set_appear_sub">Tema dan bahasa aplikasi.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+          <div>
+            <label class="form-lbl" data-i18n="lbl_theme">Tema</label>
+            <div style="display:flex;gap:8px">
+              <button id="set-dark-btn" class="sub-btn" style="flex:1" onclick="setTheme('dark')">🌙 Dark</button>
+              <button id="set-light-btn" class="sub-btn" style="flex:1" onclick="setTheme('light')">☀️ Light</button>
+            </div>
+          </div>
+          <div>
+            <label class="form-lbl" data-i18n="lbl_lang">Bahasa</label>
+            <div style="display:flex;gap:8px">
+              <button id="set-id-btn" class="sub-btn" style="flex:1" onclick="setLang('id')">🇮🇩 Indonesia</button>
+              <button id="set-en-btn" class="sub-btn" style="flex:1" onclick="setLang('en')">🇺🇸 English</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Data: Export/Import -->
+      <div class="settings-block vu d1">
+        <h3 class="settings-bh" data-i18n="set_data">Vault Data</h3>
+        <p class="settings-bs" data-i18n="set_data_sub">Export, import, atau reset data vault kamu.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+          <button class="btn-primary" onclick="openExportModal()">
+            <i class="fa-solid fa-file-arrow-down"></i>
+            <span data-i18n="btn_export">Export cred.json</span>
+          </button>
+          <button class="btn-ghost" onclick="document.getElementById('importFileApp').click()">
+            <i class="fa-solid fa-file-arrow-up"></i>
+            <span data-i18n="btn_import">Import cred.json</span>
+          </button>
+          <input type="file" id="importFileApp" accept=".json" style="display:none"
+                 onchange="IO.handleFileInput(event,'app')">
+          <button class="btn-ghost" onclick="QR.open()" title="Export as QR code">
+            <i class="fa-solid fa-qrcode"></i>
+            QR Export
+          </button>
+          <button class="btn-ghost" onclick="confirmClearData()" style="border-color:rgba(239,68,68,.3);color:#f87171">
+            <i class="fa-solid fa-trash-can"></i>
+            <span data-i18n="btn_clear">Reset Vault</span>
+          </button>
+        </div>
+        <div id="vaultStorageInfo" style="font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace"></div>
+      </div>
+
+      <!-- Custom AI Family -->
+      <div class="settings-block vu d2">
+        <h3 class="settings-bh" data-i18n="set_cat">Custom AI Family</h3>
+        <p class="settings-bs" data-i18n="set_cat_sub">Tambahkan AI family/service custom.</p>
+        <div id="customFamilyList" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end">
+          <div><label class="form-lbl" data-i18n="lbl_fname">Nama Family</label>
+            <input type="text" id="new-fam-name" class="inp" placeholder="My AI Service"></div>
+          <div><label class="form-lbl" data-i18n="lbl_fcat">Kategori</label>
+            <select id="new-fam-cat" class="inp">
+              <option>LLM</option><option>Code AI</option><option>Image Gen</option>
+              <option>Voice / TTS</option><option>AI Agent</option><option>Video Gen</option>
+              <option>Search AI</option><option>Other</option>
+            </select></div>
+          <div><label class="form-lbl" data-i18n="lbl_fmodels">Models (koma)</label>
+            <input type="text" id="new-fam-models" class="inp" placeholder="Model A, Model B"></div>
+          <button type="button" class="btn-primary" onclick="addCustomFamily()">
+            <i class="fa-solid fa-plus" style="font-size:11px"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- About -->
+      <div class="settings-block vu d3">
+        <h3 class="settings-bh">TERNAKAI v4</h3>
+        <p class="settings-bs" style="margin-bottom:12px">AI Account Manager — Local-first, IndexedDB-backed. No server, no cloud.</p>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="badge b-active">IndexedDB</span>
+          <span class="badge b-plus">AES-256 Encrypt</span>
+          <span class="badge b-free">Offline PWA</span>
+          <span class="badge b-pro">QR Transfer</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div><!-- /screen-app -->
+
+<!-- ══════════════════════════════════════════
+     MODALS
+══════════════════════════════════════════ -->
+
+<!-- ── Add Account ── -->
+<div class="modal-wrap" id="addModal">
+  <div class="modal-bg" onclick="closeModal('addModal')"></div>
+  <div class="modal-box" style="max-width:780px">
+    <div class="modal-head">
+      <div><div class="modal-title" data-i18n="modal_acc_title">Register Akun Baru</div>
+      <div class="modal-sub" data-i18n="modal_acc_sub">Simpan detail akun AI yang ingin dikelola</div></div>
+      <button class="modal-close" onclick="closeModal('addModal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="addAccForm">
+        <div class="form-sec">
+          <span class="form-sec-lbl">① Kredensial</span>
+          <div class="form-row">
+            <div><label class="form-lbl" data-i18n="lbl_email">Email / Username</label>
+              <input type="text" id="ac-email" class="inp" required></div>
+            <div><label class="form-lbl" data-i18n="lbl_pass">Password</label>
+              <input type="text" id="ac-pass" class="inp" required></div>
+          </div>
+        </div>
+        <hr class="sep">
+        <div class="form-sec">
+          <span class="form-sec-lbl">② AI Model / Service</span>
+          <div class="cat-tabs" id="catTabs"></div>
+          <div class="family-grid" id="famGrid" style="margin-bottom:14px"></div>
+          <div id="modelDetail" style="display:none">
+            <div class="form-row" style="margin-bottom:12px">
+              <div><label class="form-lbl" data-i18n="lbl_model">Jenis Model</label>
+                <select id="ac-model" class="inp" onchange="onModelSel()"></select></div>
+              <div id="customModelWrap" style="display:none">
+                <label class="form-lbl" data-i18n="lbl_custom">Model Custom</label>
+                <input type="text" id="ac-model-custom" class="inp" placeholder="nama-model"></div>
+            </div>
+            <label class="form-lbl" data-i18n="lbl_sub">Status Berlangganan</label>
+            <div class="sub-btns" style="margin-bottom:12px">
+              <button type="button" class="sub-btn" id="sb-free" onclick="pickSub('Free')">Free</button>
+              <button type="button" class="sub-btn" id="sb-plus" onclick="pickSub('Plus')">Plus</button>
+              <button type="button" class="sub-btn" id="sb-pro" onclick="pickSub('Pro')">Pro</button>
+            </div>
+            <button type="button" onclick="addModelToList()" style="font-size:12px;color:var(--mint);background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;padding:0">
+              <i class="fa-solid fa-circle-plus"></i> <span data-i18n="btn_add_model">Tambahkan model ini</span>
+            </button>
+          </div>
+          <div id="pendingModelsArea" style="display:none;margin-top:14px">
+            <label class="form-lbl" data-i18n="lbl_sel_models">Model Dipilih:</label>
+            <div id="pendingModelsList" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+          </div>
+        </div>
+        <hr class="sep">
+        <div class="form-sec">
+          <span class="form-sec-lbl">③ Status & Tags</span>
+          <div class="form-row">
+            <div><label class="form-lbl" data-i18n="lbl_status">Status Akun</label>
+              <div class="status-btns">
+                <button type="button" class="status-btn" id="stb-active" onclick="pickStatus('Active')">
+                  <span style="width:7px;height:7px;background:var(--mint);border-radius:50%;display:inline-block"></span> Active
+                </button>
+                <button type="button" class="status-btn" id="stb-limit" onclick="pickStatus('Limit')">
+                  <i class="fa-solid fa-hourglass-half"></i> Limit
+                </button>
+                <button type="button" class="status-btn" id="stb-banned" onclick="pickStatus('Banned')">
+                  <i class="fa-solid fa-ban"></i> Banned
+                </button>
+              </div>
+            </div>
+            <div>
+              <label class="form-lbl" data-i18n="lbl_tags">Tags</label>
+              <div style="display:flex;gap:7px">
+                <input type="text" id="ac-tag-input" class="inp" style="flex:1" placeholder="work, testing...">
+                <button type="button" onclick="addTag()" style="width:38px;height:44px;border-radius:9px;border:1px solid var(--border);background:var(--card2);cursor:pointer;color:var(--text3);font-size:16px;display:flex;align-items:center;justify-content:center">+</button>
+              </div>
+              <div id="tagsList" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px"></div>
+            </div>
+          </div>
+        </div>
+        <hr class="sep">
+        <div><label class="form-lbl" data-i18n="lbl_desc">Deskripsi / Kegunaan</label>
+          <textarea id="ac-desc" class="inp" rows="2" style="resize:none" placeholder="Untuk keperluan apa akun ini?"></textarea></div>
+        <input type="hidden" id="ac-status-v" value="Active">
+        <input type="hidden" id="ac-family-v" value="">
+        <input type="hidden" id="ac-sub-v" value="Free">
+        <div class="form-footer">
+          <button type="button" class="btn-ghost" onclick="closeModal('addModal')" data-i18n="btn_cancel">Batal</button>
+          <button type="submit" class="btn-primary" data-i18n="btn_save">Simpan Akun</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ── Add API Key ── -->
+<div class="modal-wrap" id="addApiModal">
+  <div class="modal-bg" onclick="closeModal('addApiModal')"></div>
+  <div class="modal-box" style="max-width:580px">
+    <div class="modal-head">
+      <div><div class="modal-title" data-i18n="modal_api_title">Tambah API Key</div>
+      <div class="modal-sub" data-i18n="modal_api_sub">Simpan API key untuk diakses kapan saja</div></div>
+      <button class="modal-close" onclick="closeModal('addApiModal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <form id="addApiForm">
+        <div class="form-sec">
+          <span class="form-sec-lbl">① Provider</span>
+          <div class="prov-grid" id="provGrid"></div>
+          <input type="hidden" id="api-prov-v" value="">
+        </div>
+        <hr class="sep">
+        <div class="form-sec">
+          <span class="form-sec-lbl">② Detail</span>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div class="form-row">
+              <div><label class="form-lbl" data-i18n="lbl_label">Label</label>
+                <input type="text" id="api-label" class="inp" placeholder="Production, Dev..." required></div>
+              <div><label class="form-lbl" data-i18n="lbl_env">Environment</label>
+                <select id="api-env" class="inp">
+                  <option>Production</option><option>Development</option><option>Testing</option><option>Personal</option>
+                </select></div>
+            </div>
+            <div><label class="form-lbl" data-i18n="lbl_apikey">API Key</label>
+              <input type="text" id="api-key" class="inp inp-mono" placeholder="sk-..." required></div>
+            <div><label class="form-lbl" data-i18n="lbl_desc">Deskripsi</label>
+              <textarea id="api-desc" class="inp" rows="2" style="resize:none" placeholder="Untuk keperluan apa key ini?"></textarea></div>
+          </div>
+        </div>
+        <div class="form-footer">
+          <button type="button" class="btn-ghost" onclick="closeModal('addApiModal')" data-i18n="btn_cancel">Batal</button>
+          <button type="submit" class="btn-primary" data-i18n="btn_save">Simpan Key</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ── Export Modal ── -->
+<div class="modal-wrap" id="exportModal">
+  <div class="modal-bg" onclick="closeModal('exportModal')"></div>
+  <div class="modal-box" style="max-width:440px">
+    <div class="modal-head">
+      <div><div class="modal-title">Export cred.json</div>
+      <div class="modal-sub">Download your vault as a portable JSON file</div></div>
+      <button class="modal-close" onclick="closeModal('exportModal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+          <div style="width:32px;height:32px;border-radius:8px;background:rgba(139,92,246,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            <i class="fa-solid fa-lock" style="color:#a78bfa;font-size:13px"></i>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:700">Password Encryption</div>
+            <div style="font-size:11px;color:var(--text3)">Optional — AES-256-GCM via Web Crypto</div>
+          </div>
+          <label style="margin-left:auto;cursor:pointer;display:flex;align-items:center;gap:7px">
+            <input type="checkbox" id="exportEncryptToggle" onchange="toggleExportPassword()"
+                   style="width:16px;height:16px;accent-color:var(--mint);cursor:pointer">
+          </label>
+        </div>
+        <div id="exportPasswordFields" style="display:none;display:flex;flex-direction:column;gap:10px">
+          <input type="password" id="exportPwd" class="inp" placeholder="Password...">
+          <input type="password" id="exportPwdConfirm" class="inp" placeholder="Confirm password...">
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.7;margin-bottom:20px">
+        <span id="exportSummary"></span>
+      </div>
+      <div style="display:flex;gap:10px">
+        <button class="btn-ghost" onclick="closeModal('exportModal')" style="flex:1" data-i18n="btn_cancel">Batal</button>
+        <button class="btn-primary" onclick="IO.executeExport()" style="flex:2">
+          <i class="fa-solid fa-file-arrow-down"></i> Download cred.json
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Password Modal (promise-based) ── -->
+<div class="modal-wrap" id="pwdModal">
+  <div class="modal-bg"></div>
+  <div class="modal-box" style="max-width:380px">
+    <div class="modal-head">
+      <div><div class="modal-title" id="pwdModalTitle">Enter Password</div>
+      <div class="modal-sub" id="pwdModalSub"></div></div>
+    </div>
+    <div class="modal-body">
+      <form id="pwdForm">
+        <div style="margin-bottom:18px">
+          <label class="form-lbl">Password</label>
+          <input type="password" id="pwdInput" class="inp" placeholder="Enter password..." required>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button type="button" class="btn-ghost" id="pwdModalCancel" style="flex:1">Cancel</button>
+          <button type="submit" class="btn-primary" style="flex:2">Confirm</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ── Import Mode Modal (promise-based) ── -->
+<div class="modal-wrap" id="importModeModal">
+  <div class="modal-bg"></div>
+  <div class="modal-box" style="max-width:400px">
+    <div class="modal-head">
+      <div><div class="modal-title">Import cred.json</div>
+      <div class="modal-sub" id="importModeSub">Vault already has data. What would you like to do?</div></div>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button id="importModeReplace" class="ob-btn ob-btn-secondary" style="margin-bottom:0;text-align:left">
+          <div class="ob-btn-icon" style="background:rgba(239,68,68,.1)"><i class="fa-solid fa-rotate" style="color:#f87171"></i></div>
+          <div class="ob-btn-text">
+            <span class="ob-btn-title" style="font-size:14px">Replace All</span>
+            <span class="ob-btn-sub" style="font-size:11px">Overwrite existing vault with imported data</span>
+          </div>
+        </button>
+        <button id="importModeMerge" class="ob-btn ob-btn-secondary" style="margin-bottom:0">
+          <div class="ob-btn-icon" style="background:rgba(0,212,170,.1)"><i class="fa-solid fa-code-merge" style="color:var(--mint)"></i></div>
+          <div class="ob-btn-text">
+            <span class="ob-btn-title" style="font-size:14px">Merge</span>
+            <span class="ob-btn-sub" style="font-size:11px">Combine with existing, skip duplicates by ID</span>
+          </div>
+        </button>
+        <button id="importModeCancel" class="btn-ghost" style="width:100%;justify-content:center;margin-top:4px">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── QR Modal ── -->
+<div class="modal-wrap" id="qrModal">
+  <div class="modal-bg" onclick="closeModal('qrModal')"></div>
+  <div class="modal-box" style="max-width:400px">
+    <div class="modal-head">
+      <div><div class="modal-title">QR Transfer</div>
+      <div class="modal-sub">Scan all QR codes in order to import on another device</div></div>
+      <button class="modal-close" onclick="closeModal('qrModal')"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="modal-body" style="text-align:center">
+      <div id="qrDisplay"></div>
+      <div class="qr-chunk-nav">
+        <button class="btn-ghost" id="qrPrev" onclick="QR.prev()" style="padding:7px 14px">
+          <i class="fa-solid fa-chevron-left"></i>
+        </button>
+        <span class="qr-chunk-info" id="qrChunkInfo">1 / 1</span>
+        <button class="btn-ghost" id="qrNext" onclick="QR.next()" style="padding:7px 14px">
+          <i class="fa-solid fa-chevron-right"></i>
+        </button>
+      </div>
+      <p style="font-size:11px;color:var(--text3);margin-top:14px;line-height:1.7">
+        Each QR contains a chunk of your vault data.<br>Scan all chunks in sequence to fully import.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div id="toast" style="position:fixed;bottom:28px;right:28px;z-index:300;display:none;align-items:center;gap:10px;padding:12px 18px;border-radius:12px;background:var(--card);border:1px solid var(--border2);box-shadow:0 8px 30px var(--sh);font-size:13px;font-weight:600;min-width:200px;max-width:320px"></div>
+
+<!-- ══════════════════════════════════════
+     SCRIPTS
+══════════════════════════════════════ -->
+<script>
+'use strict';
+
+/* ════════════════════════════════════════════════
+   MODULE: DB  —  IndexedDB wrapper
+════════════════════════════════════════════════ */
+const DB = {
+  _db:      null,
+  DB_NAME:  'TernakAI',
+  VERSION:  1,
+  STORE:    'vault',
+  KEY:      'appdata',
+
+  /** Open (or create) the IndexedDB database */
+  init() {
+    return new Promise((resolve, reject) => {
+      const req = indexedDB.open(this.DB_NAME, this.VERSION);
+
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if (!db.objectStoreNames.contains(this.STORE)) {
+          db.createObjectStore(this.STORE);
+        }
+      };
+
+      req.onsuccess = e => {
+        this._db = e.target.result;
+        resolve();
+      };
+
+      req.onerror = e => reject(new Error('IndexedDB open failed: ' + e.target.error));
+    });
+  },
+
+  /** Persist entire app state object */
+  save(data) {
+    return new Promise((resolve, reject) => {
+      const tx  = this._db.transaction(this.STORE, 'readwrite');
+      const req = tx.objectStore(this.STORE).put(data, this.KEY);
+      req.onsuccess = () => resolve();
+      req.onerror   = e => reject(e.target.error);
+    });
+  },
+
+  /** Load app state; returns null if empty */
+  load() {
+    return new Promise((resolve, reject) => {
+      const tx  = this._db.transaction(this.STORE, 'readonly');
+      const req = tx.objectStore(this.STORE).get(this.KEY);
+      req.onsuccess = e => resolve(e.target.result ?? null);
+      req.onerror   = e => reject(e.target.error);
+    });
+  },
+
+  /** Wipe the vault */
+  clear() {
+    return new Promise((resolve, reject) => {
+      const tx  = this._db.transaction(this.STORE, 'readwrite');
+      const req = tx.objectStore(this.STORE).delete(this.KEY);
+      req.onsuccess = () => resolve();
+      req.onerror   = e => reject(e.target.error);
+    });
+  },
+
+  /** Approximate size in KB */
+  async sizeKB() {
+    const data = await this.load();
+    if (!data) return 0;
+    return (new Blob([JSON.stringify(data)]).size / 1024).toFixed(1);
+  }
+};
+
+/* ════════════════════════════════════════════════
+   MODULE: CRYPTO  —  AES-256-GCM via Web Crypto
+   Layout: salt(16) + iv(12) + ciphertext → Base64
+════════════════════════════════════════════════ */
+const Crypto = {
+  /** Derive AES-GCM key from password + salt using PBKDF2 */
+  async _deriveKey(password, salt) {
+    const enc = new TextEncoder();
+    const raw = await crypto.subtle.importKey(
+      'raw', enc.encode(password), 'PBKDF2', false, ['deriveKey']
+    );
+    return crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt, iterations: 120_000, hash: 'SHA-256' },
+      raw,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['encrypt', 'decrypt']
+    );
+  },
+
+  /** Encrypt plain JS object → Base64 string */
+  async encrypt(obj, password) {
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    const iv   = crypto.getRandomValues(new Uint8Array(12));
+    const key  = await this._deriveKey(password, salt);
+    const enc  = new TextEncoder();
+
+    const cipherBuf = await crypto.subtle.encrypt(
+      { name: 'AES-GCM', iv },
+      key,
+      enc.encode(JSON.stringify(obj))
+    );
+
+    // Pack: [salt 16B][iv 12B][ciphertext …]
+    const packed = new Uint8Array(16 + 12 + cipherBuf.byteLength);
+    packed.set(salt, 0);
+    packed.set(iv, 16);
+    packed.set(new Uint8Array(cipherBuf), 28);
+
+    return btoa(String.fromCharCode(...packed));
+  },
+
+  /** Decrypt Base64 string → plain JS object */
+  async decrypt(b64, password) {
+    const bytes = Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    const salt  = bytes.slice(0, 16);
+    const iv    = bytes.slice(16, 28);
+    const ct    = bytes.slice(28);
+    const key   = await this._deriveKey(password, salt);
+    const dec   = new TextDecoder();
+
+    const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, ct);
+    return JSON.parse(dec.decode(plain));
+  }
+};
+
+/* ════════════════════════════════════════════════
+   MODULE: STORE  —  in-memory state + persistence
+════════════════════════════════════════════════ */
+const Store = {
+  accounts:      [],
+  apikeys:       [],
+  customFamilies:[],
+  prefs: { theme: 'dark', lang: 'id' },
+
+  /** Restore state from raw DB object */
+  hydrate(raw) {
+    this.accounts       = raw.accounts       ?? [];
+    this.apikeys        = raw.apikeys        ?? [];
+    this.customFamilies = raw.customFamilies ?? [];
+    this.prefs          = { theme:'dark', lang:'id', ...raw.prefs };
+  },
+
+  /** Serialize to plain object for DB / export */
+  serialize() {
+    return {
+      accounts:       this.accounts,
+      apikeys:        this.apikeys,
+      customFamilies: this.customFamilies,
+      prefs:          this.prefs
+    };
+  },
+
+  /** Merge imported data: skip duplicates by id (for accounts + apikeys) */
+  mergeWith(incoming) {
+    const existAccIds = new Set(this.accounts.map(a => a.id));
+    const existApiIds = new Set(this.apikeys.map(k => k.id));
+    const existFamNames = new Set(this.customFamilies.map(f => f.name));
+
+    (incoming.accounts       || []).forEach(a => { if (!existAccIds.has(a.id))    this.accounts.push(a); });
+    (incoming.apikeys        || []).forEach(k => { if (!existApiIds.has(k.id))    this.apikeys.push(k); });
+    (incoming.customFamilies || []).forEach(f => { if (!existFamNames.has(f.name)) this.customFamilies.push(f); });
+  },
+
+  /** Overwrite with incoming (prefs preserved) */
+  replaceWith(incoming) {
+    this.accounts       = incoming.accounts       ?? [];
+    this.apikeys        = incoming.apikeys        ?? [];
+    this.customFamilies = incoming.customFamilies ?? [];
+    // prefs intentionally NOT replaced on import
+  },
+
+  /** Write current state to IndexedDB */
+  async persist() {
+    await DB.save(this.serialize());
+  }
+};
+
+/* ════════════════════════════════════════════════
+   MODULE: IO  —  import / export cred.json
+════════════════════════════════════════════════ */
+const IO = {
+  MAGIC:   '_ternakai',
+  VERSION: '4.0',
+
+  /** Build export payload. Encrypted if password is truthy. */
+  async buildPayload(password) {
+    const data = {
+      accounts:       Store.accounts,
+      apikeys:        Store.apikeys,
+      customFamilies: Store.customFamilies
+    };
+    const payload = {
+      [this.MAGIC]: this.VERSION,
+      _exported_at: new Date().toISOString(),
+      _encrypted:   !!password
+    };
+    if (password) {
+      payload.data = await Crypto.encrypt(data, password);
+    } else {
+      Object.assign(payload, data);
+    }
+    return payload;
+  },
+
+  /** Trigger browser download of a JSON object */
+  download(obj, filename = 'cred.json') {
+    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href     = url;
+    a.download = filename;
+    a.click();
+    URL.revokeObjectURL(url);
+  },
+
+  /** Called when Export button in modal is clicked */
+  async executeExport() {
+    try {
+      const useEnc = document.getElementById('exportEncryptToggle').checked;
+      let password = null;
+
+      if (useEnc) {
+        const p1 = document.getElementById('exportPwd').value;
+        const p2 = document.getElementById('exportPwdConfirm').value;
+        if (!p1)         { showToast('Password cannot be empty', 'err'); return; }
+        if (p1 !== p2)   { showToast('Passwords do not match', 'err');   return; }
+        password = p1;
+      }
+
+      showToast('Preparing export…', 'info');
+      const payload = await this.buildPayload(password);
+      this.download(payload, `ternakai_${new Date().toISOString().split('T')[0]}.cred.json`);
+      closeModal('exportModal');
+      showToast(t('toast_saved'));
+    } catch (err) {
+      showToast('Export failed: ' + err.message, 'err');
+    }
+  },
+
+  /** Validate parsed JSON has required fields */
+  _validate(obj) {
+    if (!obj[this.MAGIC])    throw new Error('Not a valid TernakAI backup (missing magic field)');
+    if (obj._encrypted && !obj.data) throw new Error('Encrypted file is missing data field');
+    if (!obj._encrypted) {
+      if (!Array.isArray(obj.accounts)) throw new Error('Missing or invalid accounts array');
+    }
+  },
+
+  /** Extract plain data object from a (potentially encrypted) payload */
+  async _extract(obj) {
+    if (obj._encrypted) {
+      const password = await promptPassword(
+        'Encrypted Vault',
+        'This file is password-protected. Enter the password to decrypt.'
+      );
+      try {
+        return await Crypto.decrypt(obj.data, password);
+      } catch {
+        throw new Error('Decryption failed — wrong password?');
+      }
+    }
+    return {
+      accounts:       obj.accounts       ?? [],
+      apikeys:        obj.apikeys        ?? [],
+      customFamilies: obj.customFamilies ?? []
+    };
+  },
+
+  /** Full import pipeline from a File object */
+  async handleFileInput(event, origin) {
+    const file = event.target.files[0];
+    event.target.value = '';
+    if (!file) return;
+
+    showToast('Reading file…', 'info');
+
+    try {
+      // 1. Read + parse
+      const text = await file.text();
+      if (!text.trim()) throw new Error('File is empty');
+      let obj;
+      try { obj = JSON.parse(text); }
+      catch { throw new Error('Invalid JSON — file may be corrupted'); }
+
+      // 2. Validate structure
+      this._validate(obj);
+
+      // 3. Decrypt if needed
+      const data = await this._extract(obj);
+
+      // 4. Duplicate guard: check if any accounts overlap
+      const hasExisting = Store.accounts.length > 0 || Store.apikeys.length > 0;
+
+      let mode = 'replace';
+      if (hasExisting && origin === 'app') {
+        mode = await promptImportMode(
+          `Vault has ${Store.accounts.length} account(s) and ${Store.apikeys.length} key(s).`
+        );
+      }
+
+      // 5. Apply
+      if (mode === 'merge') {
+        Store.mergeWith(data);
+      } else {
+        Store.replaceWith(data);
+      }
+      await Store.persist();
+
+      // 6. Show app (in case we came from onboarding)
+      if (origin === 'onboarding') App.showApp();
+
+      renderAll();
+      showToast(
+        `${t('toast_imported')} — ${Store.accounts.length} accounts, ${Store.apikeys.length} keys`,
+        'ok'
+      );
+    } catch (err) {
+      if (err.message === 'cancelled') return;
+      showToast('Import error: ' + err.message, 'err');
+    }
+  }
+};
+
+/* ════════════════════════════════════════════════
+   MODULE: QR  —  chunked QR code export
+   Prefix format: "TK4:idx/total:jsonChunk"
+════════════════════════════════════════════════ */
+const QR = {
+  CHUNK_SIZE: 1400,  // chars per QR (keeps error-correction level M manageable)
+  _chunks:    [],
+  _current:   0,
+
+  _chunkString(str) {
+    const total = Math.ceil(str.length / this.CHUNK_SIZE);
+    return Array.from({ length: total }, (_, i) =>
+      `TK4:${i + 1}/${total}:${str.slice(i * this.CHUNK_SIZE, (i + 1) * this.CHUNK_SIZE)}`
+    );
+  },
+
+  _render() {
+    const el = document.getElementById('qrDisplay');
+    el.innerHTML = '';
+    if (!this._chunks.length) return;
+
+    if (typeof QRCode === 'undefined') {
+      el.innerHTML = '<p style="color:var(--text3);font-size:13px;padding:40px">QRCode library not loaded.<br>Please check your internet connection.</p>';
+      return;
+    }
+
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    new QRCode(el, {
+      text:         this._chunks[this._current],
+      width:        230,
+      height:       230,
+      colorDark:    isDark ? '#e2e8f0' : '#0f172a',
+      colorLight:   isDark ? '#0c1728' : '#ffffff',
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    document.getElementById('qrChunkInfo').textContent =
+      `${this._current + 1} / ${this._chunks.length}`;
+    document.getElementById('qrPrev').disabled = this._current === 0;
+    document.getElementById('qrNext').disabled = this._current === this._chunks.length - 1;
+  },
+
+  open() {
+    const json   = JSON.stringify({
+      accounts:       Store.accounts,
+      apikeys:        Store.apikeys,
+      customFamilies: Store.customFamilies,
+      _ternakai:      '4.0',
+      _via:           'qr'
+    });
+    this._chunks  = this._chunkString(json);
+    this._current = 0;
+    this._render();
+    document.getElementById('qrModal').classList.add('open');
+  },
+
+  next() { if (this._current < this._chunks.length - 1) { this._current++; this._render(); } },
+  prev() { if (this._current > 0)                       { this._current--; this._render(); } }
+};
+
+/* ════════════════════════════════════════════════
+   AI CATALOG DATA
+════════════════════════════════════════════════ */
+const CATS = {
+  'LLM':         { icon:'🧠', color:'#00d4aa' },
+  'Code AI':     { icon:'💻', color:'#8b5cf6' },
+  'Image Gen':   { icon:'🎨', color:'#f59e0b' },
+  'Voice / TTS': { icon:'🎙️', color:'#ec4899' },
+  'AI Agent':    { icon:'🤖', color:'#06b6d4' },
+  'Video Gen':   { icon:'🎬', color:'#ef4444' },
+  'Search AI':   { icon:'🔍', color:'#10b981' },
+  'Other':       { icon:'✨', color:'#94a3b8' }
+};
+
+const BASE_FAMILIES = {
+  'ChatGPT':       { cat:'LLM',         domain:'chat.openai.com',      color:'#10a37f', models:['GPT-4o','GPT-4o mini','o1','o1-mini','o3','o3-mini','Custom...'] },
+  'Claude':        { cat:'LLM',         domain:'claude.ai',            color:'#d97706', models:['Claude Opus 4','Claude Sonnet 4.6','Claude Haiku 3.5','Claude 3.7 Sonnet','Custom...'] },
+  'Gemini':        { cat:'LLM',         domain:'gemini.google.com',    color:'#4285f4', models:['Gemini 2.5 Pro','Gemini 2.0 Flash','Gemini 1.5 Pro','Custom...'] },
+  'Groq':          { cat:'LLM',         domain:'groq.com',             color:'#f97316', models:['Llama 3.3 70B','Llama 3.1 70B','Llama 3.1 8B','Mixtral 8x7B','Custom...'] },
+  'Grok':          { cat:'LLM',         domain:'x.ai',                 color:'#94a3b8', models:['Grok-3','Grok-3 mini','Grok-2','Custom...'] },
+  'Mistral':       { cat:'LLM',         domain:'mistral.ai',           color:'#ff7000', models:['Mistral Large','Mistral Medium','Codestral','Custom...'] },
+  'Perplexity':    { cat:'LLM',         domain:'perplexity.ai',        color:'#1fb8cd', models:['Sonar Pro','Sonar','Deep Research','Custom...'] },
+  'DeepSeek':      { cat:'LLM',         domain:'deepseek.com',         color:'#4d6bfe', models:['DeepSeek V3','DeepSeek R1','DeepSeek R1 Lite','Custom...'] },
+  'OpenRouter':    { cat:'LLM',         domain:'openrouter.ai',        color:'#6366f1', models:['Any LLM via API','Llama 3.3 70B (free)','DeepSeek R1 (free)','Custom...'] },
+  'Cohere':        { cat:'LLM',         domain:'cohere.com',           color:'#39b2a7', models:['Command R+','Command R','Custom...'] },
+  'Meta Llama':    { cat:'LLM',         domain:'llama.meta.com',       color:'#0668e1', models:['Llama 3.3 70B','Llama 3.1 405B','Custom...'] },
+  'GitHub Copilot':{ cat:'Code AI',     domain:'github.com',           color:'#6e7681', models:['Copilot Free','Copilot Pro','Copilot Business','Copilot Enterprise'] },
+  'Cursor':        { cat:'Code AI',     domain:'cursor.com',           color:'#8b5cf6', models:['Cursor Free','Cursor Pro','Cursor Business'] },
+  'Codeium':       { cat:'Code AI',     domain:'codeium.com',          color:'#09b6a2', models:['Windsurf Free','Windsurf Pro','Windsurf Teams'] },
+  'Tabnine':       { cat:'Code AI',     domain:'tabnine.com',          color:'#5856d6', models:['Tabnine Starter','Tabnine Pro','Custom...'] },
+  'Amazon Q':      { cat:'Code AI',     domain:'aws.amazon.com',       color:'#ff9900', models:['Q Developer Free','Q Developer Pro','Custom...'] },
+  'Replit AI':     { cat:'Code AI',     domain:'replit.com',           color:'#f26207', models:['Replit Core','Replit Teams','Custom...'] },
+  'Midjourney':    { cat:'Image Gen',   domain:'midjourney.com',       color:'#9b59b6', models:['MJ v7','MJ v6.1','MJ v5.2','Custom...'] },
+  'DALL-E':        { cat:'Image Gen',   domain:'openai.com',           color:'#10a37f', models:['DALL-E 3','DALL-E 2'] },
+  'Stable Diffusion':{ cat:'Image Gen', domain:'stability.ai',         color:'#7c3aed', models:['SD3 Medium','SDXL 1.0','SD1.5','Custom...'] },
+  'Adobe Firefly': { cat:'Image Gen',   domain:'firefly.adobe.com',    color:'#ff0000', models:['Firefly Image 3','Firefly Image 2','Custom...'] },
+  'Ideogram':      { cat:'Image Gen',   domain:'ideogram.ai',          color:'#6366f1', models:['Ideogram 3.0','Ideogram 2.0','Custom...'] },
+  'Flux':          { cat:'Image Gen',   domain:'blackforestlabs.ai',   color:'#8b5cf6', models:['FLUX.1 Pro','FLUX.1 Dev','FLUX.1 Schnell','Custom...'] },
+  'ElevenLabs':    { cat:'Voice / TTS', domain:'elevenlabs.io',        color:'#f59e0b', models:['Multilingual v2','Turbo v2.5','English v1','Custom...'] },
+  'Play.ht':       { cat:'Voice / TTS', domain:'play.ht',              color:'#8b5cf6', models:['PlayHT 3.0','PlayHT 2.0','Custom...'] },
+  'Murf AI':       { cat:'Voice / TTS', domain:'murf.ai',              color:'#06b6d4', models:['Murf Free','Murf Basic','Murf Pro','Custom...'] },
+  'Suno':          { cat:'Voice / TTS', domain:'suno.com',             color:'#ec4899', models:['Suno v4','Suno v3.5','Custom...'] },
+  'Udio':          { cat:'Voice / TTS', domain:'udio.com',             color:'#8b5cf6', models:['Udio Standard','Custom...'] },
+  'Open Claw':     { cat:'AI Agent',    domain:null,                   color:'#f97316', models:['Open Claw Standard','Custom...'] },
+  'AutoGPT':       { cat:'AI Agent',    domain:'agpt.co',              color:'#10a37f', models:['AutoGPT Cloud','AutoGPT Self-hosted','Custom...'] },
+  'CrewAI':        { cat:'AI Agent',    domain:'crewai.com',           color:'#ef4444', models:['CrewAI Free','CrewAI Enterprise','Custom...'] },
+  'n8n AI':        { cat:'AI Agent',    domain:'n8n.io',               color:'#ea580c', models:['n8n Cloud','n8n Self-hosted','Custom...'] },
+  'Zapier AI':     { cat:'AI Agent',    domain:'zapier.com',           color:'#ff4f00', models:['Zapier Free','Zapier Starter','Zapier Pro','Custom...'] },
+  'LangChain':     { cat:'AI Agent',    domain:'langchain.com',        color:'#10a37f', models:['LangSmith Free','LangSmith Plus','Custom...'] },
+  'Make AI':       { cat:'AI Agent',    domain:'make.com',             color:'#6366f1', models:['Make Free','Make Core','Make Pro','Custom...'] },
+  'Runway':        { cat:'Video Gen',   domain:'runwayml.com',         color:'#00d4aa', models:['Gen-3 Alpha','Gen-3 Alpha Turbo','Custom...'] },
+  'Pika Labs':     { cat:'Video Gen',   domain:'pika.art',             color:'#8b5cf6', models:['Pika 2.0','Pika 1.5','Custom...'] },
+  'Kling AI':      { cat:'Video Gen',   domain:'klingai.com',          color:'#4d6bfe', models:['Kling 1.5','Kling 1.0','Custom...'] },
+  'HeyGen':        { cat:'Video Gen',   domain:'heygen.com',           color:'#f59e0b', models:['HeyGen Free','HeyGen Creator','Custom...'] },
+  'Sora':          { cat:'Video Gen',   domain:'openai.com',           color:'#10a37f', models:['Sora Turbo','Custom...'] },
+  'Bing Copilot':  { cat:'Search AI',   domain:'bing.com',             color:'#0078d4', models:['Copilot Free','Copilot Pro'] },
+  'You.com':       { cat:'Search AI',   domain:'you.com',              color:'#1fb8cd', models:['YouPro','YouFree','Custom...'] },
+  'Lainnya':       { cat:'Other',       domain:null,                   color:'#8b5cf6', models:['Custom...'] }
+};
+
+const PROVIDERS = {
+  'Anthropic':    { domain:'anthropic.com',        color:'#d97706' },
+  'OpenAI':       { domain:'openai.com',            color:'#10a37f' },
+  'Google':       { domain:'google.com',            color:'#4285f4' },
+  'Groq':         { domain:'groq.com',              color:'#f97316' },
+  'xAI':          { domain:'x.ai',                  color:'#94a3b8' },
+  'Mistral':      { domain:'mistral.ai',            color:'#ff7000' },
+  'Perplexity':   { domain:'perplexity.ai',         color:'#1fb8cd' },
+  'DeepSeek':     { domain:'deepseek.com',          color:'#4d6bfe' },
+  'OpenRouter':   { domain:'openrouter.ai',         color:'#6366f1' },
+  'Cohere':       { domain:'cohere.com',            color:'#39b2a7' },
+  'AWS':          { domain:'aws.amazon.com',        color:'#ff9900' },
+  'Azure':        { domain:'azure.microsoft.com',   color:'#0078d4' },
+  'GitHub':       { domain:'github.com',            color:'#6e7681' },
+  'Stability AI': { domain:'stability.ai',          color:'#7c3aed' },
+  'ElevenLabs':   { domain:'elevenlabs.io',         color:'#f59e0b' },
+  'Replicate':    { domain:'replicate.com',         color:'#0ea5e9' },
+  'Hugging Face': { domain:'huggingface.co',        color:'#ffd21e' },
+  'Lainnya':      { domain:null,                    color:'#8b5cf6' }
+};
+
+/* ════════════════════════════════════════════════
+   I18N
+════════════════════════════════════════════════ */
+const I18N = {
+  id: {
+    nav_dash:'Dashboard',nav_acc:'Akun',nav_api:'API Keys',nav_set:'Pengaturan',
+    dash_tag:'System Overview',dash_sub:'Kelola seluruh akun & API key AI kamu dari satu panel.',
+    stat_total:'Total Akun',stat_fam:'AI Families',stat_prem:'Premium',stat_lim:'Limit/Suspend',stat_keys:'API Keys',
+    news_title:'Berita AI',tips_title:'AI Tips',powered_by:'Powered by Claude',breakdown:'Family Breakdown',
+    sec_notice:'Data di IndexedDB. Hover untuk reveal. Export untuk backup.',
+    acc_tag:'Manajemen Akun',acc_title:'AI Accounts',
+    api_tag:'API Management',api_title:'API Keys',
+    set_tag:'Konfigurasi',set_title:'Pengaturan',
+    set_appear:'Tampilan',set_appear_sub:'Tema dan bahasa aplikasi.',
+    lbl_theme:'Tema',lbl_lang:'Bahasa',
+    set_cat:'Custom AI Family',set_cat_sub:'Tambahkan AI family/service custom.',
+    lbl_fname:'Nama Family',lbl_fcat:'Kategori',lbl_fmodels:'Models (koma)',
+    set_data:'Vault Data',set_data_sub:'Export, import, atau reset data vault.',
+    btn_export:'Export cred.json',btn_import:'Import cred.json',btn_clear:'Reset Vault',
+    modal_acc_title:'Register Akun Baru',modal_acc_sub:'Simpan detail akun AI',
+    modal_api_title:'Tambah API Key',modal_api_sub:'Simpan API key',
+    lbl_email:'Email / Username',lbl_pass:'Password',lbl_model:'Jenis Model',lbl_custom:'Model Custom',
+    lbl_sub:'Status Berlangganan',btn_add_model:'Tambahkan model ini',lbl_sel_models:'Model Dipilih:',
+    lbl_status:'Status Akun',lbl_tags:'Tags',lbl_desc:'Deskripsi / Kegunaan',
+    lbl_label:'Label',lbl_env:'Environment',lbl_apikey:'API Key',
+    btn_cancel:'Batal',btn_save:'Simpan',
+    th_cred:'Kredensial',th_models:'AI Models',th_status:'Status',th_tags:'Tags',th_desc:'Deskripsi',
+    empty_acc:'Belum ada akun',empty_acc_sub:'Klik Tambah Akun untuk memulai',
+    empty_api:'Belum ada API key',empty_api_sub:'Klik Tambah API Key untuk memulai',
+    add_acc:'Tambah Akun',add_api:'Tambah API Key',
+    toast_copied:'Disalin!',toast_saved:'Tersimpan!',toast_imported:'Data diimport!',
+    toast_cleared:'Vault direset!',toast_err:'Gagal',
+    ob_new:'Buat Vault Baru',ob_new_sub:'Mulai vault kosong',
+    ob_import:'Import cred.json',ob_import_sub:'Restore dari file backup',
+  },
+  en: {
+    nav_dash:'Dashboard',nav_acc:'Accounts',nav_api:'API Keys',nav_set:'Settings',
+    dash_tag:'System Overview',dash_sub:'Manage all your AI accounts & API keys from one panel.',
+    stat_total:'Total Accounts',stat_fam:'AI Families',stat_prem:'Premium',stat_lim:'Limit/Suspended',stat_keys:'API Keys',
+    news_title:'AI News',tips_title:'AI Tips',powered_by:'Powered by Claude',breakdown:'Family Breakdown',
+    sec_notice:'Data in IndexedDB. Hover to reveal. Export to back up.',
+    acc_tag:'Account Management',acc_title:'AI Accounts',
+    api_tag:'API Management',api_title:'API Keys',
+    set_tag:'Configuration',set_title:'Settings',
+    set_appear:'Appearance',set_appear_sub:'Customize theme and language.',
+    lbl_theme:'Theme',lbl_lang:'Language',
+    set_cat:'Custom AI Family',set_cat_sub:'Add custom AI families/services.',
+    lbl_fname:'Family Name',lbl_fcat:'Category',lbl_fmodels:'Models (comma)',
+    set_data:'Vault Data',set_data_sub:'Export, import, or reset vault data.',
+    btn_export:'Export cred.json',btn_import:'Import cred.json',btn_clear:'Reset Vault',
+    modal_acc_title:'Register New Account',modal_acc_sub:'Save AI account details',
+    modal_api_title:'Add API Key',modal_api_sub:'Save an API key for quick access',
+    lbl_email:'Email / Username',lbl_pass:'Password',lbl_model:'Model Type',lbl_custom:'Custom Model',
+    lbl_sub:'Subscription Tier',btn_add_model:'Add this model',lbl_sel_models:'Selected Models:',
+    lbl_status:'Account Status',lbl_tags:'Tags',lbl_desc:'Description / Purpose',
+    lbl_label:'Label',lbl_env:'Environment',lbl_apikey:'API Key',
+    btn_cancel:'Cancel',btn_save:'Save',
+    th_cred:'Credentials',th_models:'AI Models',th_status:'Status',th_tags:'Tags',th_desc:'Description',
+    empty_acc:'No accounts yet',empty_acc_sub:'Click Add Account to get started',
+    empty_api:'No API keys yet',empty_api_sub:'Click Add API Key to get started',
+    add_acc:'Add Account',add_api:'Add API Key',
+    toast_copied:'Copied!',toast_saved:'Saved!',toast_imported:'Data imported!',
+    toast_cleared:'Vault reset!',toast_err:'Error',
+    ob_new:'Create New Vault',ob_new_sub:'Start with an empty vault',
+    ob_import:'Import cred.json',ob_import_sub:'Restore from a backup file',
+  }
+};
+function t(key) { return I18N[Store.prefs.lang]?.[key] ?? key; }
+
+/* ════════════════════════════════════════════════
+   UI STATE  (form-level, not persisted)
+════════════════════════════════════════════════ */
+let selFamily = null, selStatus = 'Active', selSub = 'Free',
+    selCat = 'LLM', pendingModels = [], pendingTags = [], selProvider = null;
+
+/* ════════════════════════════════════════════════
+   CLOCK
+════════════════════════════════════════════════ */
+setInterval(() => {
+  const el = document.getElementById('clock');
+  if (el) el.textContent = new Date().toLocaleTimeString('id-ID', { hour12: false });
+}, 1000);
+
+/* ════════════════════════════════════════════════
+   THEME & LANG
+════════════════════════════════════════════════ */
+async function applyTheme(t) {
+  Store.prefs.theme = t;
+  document.documentElement.setAttribute('data-theme', t);
+  const icon = document.getElementById('themeIcon');
+  if (icon) icon.className = t === 'dark' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+  ['dark','light'].forEach(v => {
+    const b = document.getElementById('set-'+v+'-btn');
+    if (b) b.className = 'sub-btn' + (t === v ? (v==='dark' ? ' sub-pro' : ' sub-free') : '');
+  });
+  if (DB._db) await Store.persist();
+}
+function toggleTheme() { applyTheme(Store.prefs.theme === 'dark' ? 'light' : 'dark'); }
+function setTheme(v)   { applyTheme(v); }
+
+async function applyLang(l) {
+  Store.prefs.lang = l;
+  document.documentElement.lang = l;
+  const label = document.getElementById('langLabel');
+  if (label) label.textContent = l === 'id' ? 'EN' : 'ID';
+  const btn = document.getElementById('langBtn');
+  if (btn) btn.classList.toggle('on', l === 'en');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (I18N[l]?.[key]) el.innerHTML = I18N[l][key];
+  });
+  ['id','en'].forEach(v => {
+    const b = document.getElementById('set-'+v+'-btn');
+    if (b) b.className = 'sub-btn' + (l === v ? ' sub-plus' : '');
+  });
+  updateCatFilter();
+  if (DB._db) await Store.persist();
+}
+function toggleLang() { applyLang(Store.prefs.lang === 'id' ? 'en' : 'id'); }
+function setLang(v)   { applyLang(v); }
+
+/* ════════════════════════════════════════════════
+   NAV
+════════════════════════════════════════════════ */
+function go(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.getElementById('nav-' + name).classList.add('active');
+  if (name === 'dashboard') { renderBreakdown(); updateStorageInfo(); }
+  if (name === 'settings')  { renderCustomFamilyList(); updateStorageInfo(); }
+}
+
+/* ════════════════════════════════════════════════
+   TOAST
+════════════════════════════════════════════════ */
+let _toastTimer;
+function showToast(msg, type = 'ok') {
+  const el = document.getElementById('toast');
+  const colors = { ok: 'var(--mint)', err: '#f87171', info: '#a78bfa' };
+  const icons  = { ok: 'fa-circle-check', err: 'fa-circle-xmark', info: 'fa-circle-info' };
+  el.innerHTML = `<i class="fa-solid ${icons[type]}" style="color:${colors[type]}"></i> ${msg}`;
+  el.style.display = 'flex';
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => { el.style.display = 'none'; }, 2600);
+}
+
+/* ════════════════════════════════════════════════
+   COPY UTIL
+════════════════════════════════════════════════ */
+function copyText(val, btn) {
+  navigator.clipboard.writeText(val).then(() => {
+    showToast(t('toast_copied'));
+    if (btn) {
+      const orig = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-check" style="color:var(--mint)"></i>';
+      setTimeout(() => { btn.innerHTML = orig; }, 1500);
+    }
+  });
+}
+
+/* ════════════════════════════════════════════════
+   STATS
+════════════════════════════════════════════════ */
+function updateStats() {
+  document.getElementById('st-total').textContent   = Store.accounts.length;
+  document.getElementById('st-apikeys').textContent = Store.apikeys.length;
+  document.getElementById('badge-acc').textContent  = Store.accounts.length;
+  document.getElementById('badge-api').textContent  = Store.apikeys.length;
+
+  const fams = new Set(Store.accounts.flatMap(a => a.ai_models.map(m => m.family)));
+  document.getElementById('st-fam').textContent  = fams.size;
+
+  const prem = Store.accounts.filter(a => a.ai_models.some(m => m.sub === 'Pro' || m.sub === 'Plus')).length;
+  document.getElementById('st-prem').textContent = prem;
+
+  const lim = Store.accounts.filter(a => a.status === 'Limit' || a.status === 'Banned').length;
+  document.getElementById('st-lim').textContent  = lim;
+}
+
+function renderBreakdown() {
+  const el   = document.getElementById('breakdownList');
+  if (!el)   return;
+  const tally = {};
+  Store.accounts.forEach(a => a.ai_models.forEach(m => { tally[m.family] = (tally[m.family] || 0) + 1; }));
+
+  if (!Object.keys(tally).length) {
+    el.innerHTML = '<p style="font-size:12px;color:var(--text3);text-align:center;padding:10px 0">No data yet</p>';
+    return;
+  }
+
+  const fams  = getFamilies();
+  const total = Object.values(tally).reduce((a, b) => a + b, 0);
+  el.innerHTML = Object.entries(tally)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 6)
+    .map(([fam, n]) => {
+      const meta    = fams[fam] || { domain: null, color: '#8b5cf6' };
+      const pct     = Math.round(n / total * 100);
+      const favicon = meta.domain ? `https://www.google.com/s2/favicons?domain=${meta.domain}&sz=32` : null;
+      return `<div style="display:flex;align-items:center;gap:10px">
+        ${favicon ? `<img src="${favicon}" style="width:16px;height:16px;border-radius:4px;flex-shrink:0" onerror="this.style.display='none'">` :
+                    `<div style="width:16px;height:16px;border-radius:4px;background:${meta.color}22;flex-shrink:0"></div>`}
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;justify-content:space-between">
+            <span style="font-size:12px;font-weight:700;color:var(--text2)">${fam}</span>
+            <span style="font-size:11px;color:var(--text3)">${n}</span>
+          </div>
+          <div class="prog-bar"><div class="prog-fill" style="width:${pct}%;background:${meta.color}"></div></div>
+        </div>
+      </div>`;
+    }).join('');
+}
+
+async function updateStorageInfo() {
+  const el = document.getElementById('vaultStorageInfo');
+  if (!el) return;
+  const kb = await DB.sizeKB();
+  el.textContent = `Vault size: ~${kb} KB · ${Store.accounts.length} accounts · ${Store.apikeys.length} keys`;
+}
+
+/* ════════════════════════════════════════════════
+   NEWS & TIPS
+════════════════════════════════════════════════ */
+const FALLBACK_TIPS = [
+  { icon:'🔑', title:'Rotasi API Key Berkala',    tip:'Ganti API key setiap 90 hari untuk mencegah penyalahgunaan.',                  tag:'Security' },
+  { icon:'⚡', title:'Groq untuk Inferensi Cepat', tip:'Groq menawarkan ~300 tok/s, ideal untuk real-time chat.',                      tag:'Speed' },
+  { icon:'🎯', title:'System Prompt Spesifik',      tip:'Semakin detail system prompt, semakin konsisten output model.',               tag:'Prompting' },
+  { icon:'💰', title:'Pakai Model Mini',             tip:'Gunakan haiku/mini untuk tugas rutin — hemat 20x biaya.',                   tag:'Cost' }
+];
+const FALLBACK_NEWS = [
+  { title:'OpenAI GPT-4o: Enhanced multimodal capabilities released',     link:'#', pubDate:'2025-03-15', source:'TechCrunch' },
+  { title:'Google Gemini 2.5 Pro breaks coding benchmark records',         link:'#', pubDate:'2025-03-12', source:'The Verge' },
+  { title:'Anthropic Claude 3.7 Sonnet: extended thinking mode arrives',   link:'#', pubDate:'2025-03-10', source:'VentureBeat' },
+  { title:'Meta releases Llama 3.3 with improved reasoning',               link:'#', pubDate:'2025-03-08', source:'TechCrunch' }
+];
+
+async function loadNews() {
+  const el   = document.getElementById('newsContainer');
+  const icon = document.getElementById('newsRefreshIcon');
+  el.innerHTML = '<div class="shimmer" style="height:68px"></div><div class="shimmer" style="height:68px;margin-top:8px"></div><div class="shimmer" style="height:58px;margin-top:8px"></div>';
+  icon.className = 'fa-solid fa-rotate-right fa-spin';
+  try {
+    const res  = await fetch('https://api.rss2json.com/v1/api.json?rss_url=https://techcrunch.com/category/artificial-intelligence/feed/&count=4');
+    const data = await res.json();
+    if (data.status === 'ok' && data.items?.length) {
+      el.innerHTML = data.items.map((item, i) => `
+        <div class="news-card" style="animation:fadeUp .35s ${i*.07}s both">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px">
+            <span class="news-src">TechCrunch AI</span>
+            <span class="news-date">${new Date(item.pubDate).toLocaleDateString(Store.prefs.lang === 'id' ? 'id-ID' : 'en-US', { month:'short', day:'numeric' })}</span>
+          </div>
+          <a href="${item.link}" target="_blank" rel="noopener" class="news-title">${item.title}</a>
+        </div>`).join('');
+      return;
+    }
+    throw new Error('No items');
+  } catch {
+    el.innerHTML = FALLBACK_NEWS.map((n, i) => `
+      <div class="news-card" style="animation:fadeUp .35s ${i*.07}s both">
+        <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+          <span class="news-src">${n.source}</span><span class="news-date">${n.pubDate}</span>
+        </div>
+        <span class="news-title" style="cursor:default">${n.title}</span>
+      </div>`).join('');
+  } finally {
+    icon.className = 'fa-solid fa-rotate-right';
+  }
+}
+
+async function loadTips() {
+  const el   = document.getElementById('tipsContainer');
+  const icon = document.getElementById('tipsRefreshIcon');
+  const btn  = document.getElementById('tipsRefreshBtn');
+  el.innerHTML = '<div class="shimmer" style="height:68px"></div><div class="shimmer" style="height:68px;margin-top:8px"></div><div class="shimmer" style="height:58px;margin-top:8px"></div>';
+  icon.className = 'fa-solid fa-rotate-right fa-spin';
+  btn.disabled   = true;
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 900,
+        messages: [{
+          role: 'user',
+          content: `Give 4 practical AI tips for developers in ${Store.prefs.lang === 'id' ? 'Bahasa Indonesia' : 'English'}. Reply ONLY with JSON array, no markdown. Format: [{"icon":"emoji","title":"max 5 words","tip":"1-2 sentences","tag":"1 word"}]`
+        }]
+      })
+    });
+    const data = await res.json();
+    const raw  = data.content.map(c => c.text || '').join('').trim().replace(/```json|```/gm, '').trim();
+    renderTips(JSON.parse(raw));
+  } catch {
+    renderTips(FALLBACK_TIPS);
+  } finally {
+    icon.className = 'fa-solid fa-rotate-right';
+    btn.disabled   = false;
+  }
+}
+
+function renderTips(tips) {
+  document.getElementById('tipsContainer').innerHTML = tips.map((tip, i) => `
+    <div class="tip-card" style="animation:fadeUp .35s ${i*.07}s both">
+      <div style="display:flex;align-items:start;gap:11px">
+        <span style="font-size:20px;line-height:1;flex-shrink:0;margin-top:1px">${tip.icon}</span>
+        <div>
+          <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">
+            <h4 style="font-size:13px;font-weight:700">${tip.title}</h4>
+            <span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;background:var(--mint-dim);color:var(--mint);border:1px solid var(--mint-border);font-family:'JetBrains Mono',monospace">${tip.tag}</span>
+          </div>
+          <p style="font-size:12px;color:var(--text3);line-height:1.7">${tip.tip}</p>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+/* ════════════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════════════ */
+function getFamilies() {
+  const all = { ...BASE_FAMILIES };
+  Store.customFamilies.forEach(f => {
+    all[f.name] = { cat: f.cat, domain: null, color: f.color || '#8b5cf6', models: f.models };
+  });
+  return all;
+}
+
+function updateCatFilter() {
+  const sel = document.getElementById('filterCat');
+  if (!sel) return;
+  const cur = sel.value;
+  sel.innerHTML = `<option value="">${Store.prefs.lang === 'id' ? 'Semua Kategori' : 'All Categories'}</option>`;
+  Object.keys(CATS).forEach(cat => {
+    const o = document.createElement('option');
+    o.value = cat; o.textContent = CATS[cat].icon + ' ' + cat;
+    sel.appendChild(o);
+  });
+  sel.value = cur;
+}
+
+/* ════════════════════════════════════════════════
+   RENDER ACCOUNTS
+════════════════════════════════════════════════ */
+function renderAccounts() {
+  const q     = (document.getElementById('searchAcc')?.value || '').toLowerCase();
+  const catF  = document.getElementById('filterCat')?.value  || '';
+  const stF   = document.getElementById('filterStatus')?.value || '';
+  const fams  = getFamilies();
+
+  let data = [...Store.accounts].sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+  if (q)    data = data.filter(a =>
+    a.email.toLowerCase().includes(q) || a.description.toLowerCase().includes(q) ||
+    a.ai_models.some(m => m.family.toLowerCase().includes(q) || m.model.toLowerCase().includes(q)) ||
+    (a.tags || []).some(tag => tag.toLowerCase().includes(q))
+  );
+  if (catF) data = data.filter(a => a.ai_models.some(m => m.cat === catF));
+  if (stF)  data = data.filter(a => a.status === stF);
+
+  const tbody = document.getElementById('accBody');
+  const empty = document.getElementById('accEmpty');
+  tbody.innerHTML = '';
+  if (!data.length) { empty.style.display = ''; return; }
+  empty.style.display = 'none';
+
+  const stMap = {
+    Active: `<span class="badge b-active"><span style="width:6px;height:6px;background:var(--mint);border-radius:50%;display:inline-block"></span> Active</span>`,
+    Limit:  `<span class="badge b-limit"><i class="fa-solid fa-hourglass-half"></i> Limit</span>`,
+    Banned: `<span class="badge b-banned"><i class="fa-solid fa-ban"></i> Banned</span>`
+  };
+
+  data.forEach(acc => {
+    const modelTags = acc.ai_models.map(m => {
+      const meta    = fams[m.family] || { domain: null, color: '#8b5cf6' };
+      const favicon = meta.domain ? `https://www.google.com/s2/favicons?domain=${meta.domain}&sz=32` : null;
+      const subCls  = m.sub === 'Pro' ? 'b-pro' : m.sub === 'Plus' ? 'b-plus' : 'b-free';
+      return `<span class="model-tag" style="background:${meta.color}13;border-color:${meta.color}2e;color:${meta.color}">
+        ${favicon ? `<img src="${favicon}" onerror="this.style.display='none'">` : ''}
+        ${m.family} · ${m.model}
+        <span class="badge ${subCls}" style="padding:1px 5px;font-size:9px;border-radius:4px">${m.sub}</span>
+      </span>`;
+    }).join('');
+
+    const tagChips = (acc.tags || []).map(tag => `<span class="tag-chip">${tag}</span>`).join('');
+    const safePass = acc.password.replace(/'/g, "\\'");
+
+    const tr = document.createElement('tr');
+    if (acc.pinned) tr.className = 'tr-pinned';
+    tr.innerHTML = `
+      <td style="padding:16px 8px 16px 20px">
+        <button onclick="togglePin('${acc.id}',this)" class="btn-icon ${acc.pinned ? 'pin-on' : ''}" title="Pin">
+          <i class="fa-${acc.pinned ? 'solid' : 'regular'} fa-star" style="font-size:12px"></i>
+        </button>
+      </td>
+      <td>
+        <div style="font-weight:700;font-size:14px;margin-bottom:7px">${acc.email}</div>
+        <div class="secret-wrap">
+          <span class="secret-text">${acc.password}</span>
+          <button class="secret-copy" onclick="copyText('${safePass}',this)" title="Copy password">
+            <i class="fa-solid fa-copy"></i>
+          </button>
+        </div>
+      </td>
+      <td><div style="display:flex;flex-wrap:wrap;max-width:360px">${modelTags}</div></td>
+      <td>${stMap[acc.status] || stMap.Active}</td>
+      <td><div style="display:flex;flex-wrap:wrap;max-width:160px">${tagChips}</div></td>
+      <td style="max-width:220px;font-size:13px;color:var(--text3);line-height:1.65">${acc.description || '—'}</td>
+      <td>
+        <button onclick="deleteAccount('${acc.id}')" class="btn-icon danger" title="Delete">
+          <i class="fa-solid fa-trash" style="font-size:11px"></i>
+        </button>
+      </td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+async function togglePin(id, btn) {
+  const acc = Store.accounts.find(a => a.id === id);
+  if (!acc) return;
+  acc.pinned = !acc.pinned;
+  btn.className = 'btn-icon ' + (acc.pinned ? 'pin-on' : '');
+  btn.innerHTML = `<i class="fa-${acc.pinned ? 'solid' : 'regular'} fa-star" style="font-size:12px"></i>`;
+  await Store.persist();
+  renderAccounts();
+}
+
+async function deleteAccount(id) {
+  if (!confirm(Store.prefs.lang === 'id' ? 'Hapus akun ini?' : 'Delete this account?')) return;
+  Store.accounts = Store.accounts.filter(a => a.id !== id);
+  await Store.persist();
+  renderAccounts(); updateStats();
+}
+
+/* ════════════════════════════════════════════════
+   RENDER API KEYS
+════════════════════════════════════════════════ */
+function renderApiKeys() {
+  const q    = (document.getElementById('searchApi')?.value || '').toLowerCase();
+  let data   = Store.apikeys;
+  if (q) data = data.filter(k =>
+    k.label.toLowerCase().includes(q) || k.provider.toLowerCase().includes(q) ||
+    (k.description || '').toLowerCase().includes(q)
+  );
+
+  const grid  = document.getElementById('apiGrid');
+  const empty = document.getElementById('apiEmpty');
+  grid.innerHTML = '';
+  if (!data.length) { empty.style.display = ''; return; }
+  empty.style.display = 'none';
+
+  const envColors = { Production:'#ef4444', Development:'#f59e0b', Testing:'#06b6d4', Personal:'#8b5cf6' };
+
+  data.forEach(k => {
+    const meta     = PROVIDERS[k.provider] || { domain: null, color: '#8b5cf6' };
+    const favicon  = meta.domain ? `https://www.google.com/s2/favicons?domain=${meta.domain}&sz=64` : null;
+    const envColor = envColors[k.env] || '#94a3b8';
+    const safeKey  = k.key.replace(/'/g, "\\'");
+
+    const div = document.createElement('div');
+    div.className  = 'card';
+    div.style.padding = '22px';
+    div.innerHTML = `
+      <div style="display:flex;align-items:start;justify-content:space-between;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:42px;height:42px;border-radius:11px;background:${meta.color}16;border:1px solid ${meta.color}28;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+            ${favicon ? `<img src="${favicon}" style="width:22px;height:22px;border-radius:4px" onerror="this.style.display='none'">` : `<i class='fa-solid fa-key' style='color:${meta.color};font-size:14px'></i>`}
+          </div>
+          <div>
+            <div style="font-size:15px;font-weight:700">${k.label}</div>
+            <div style="display:flex;align-items:center;gap:7px;margin-top:4px">
+              <span style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">${k.provider}</span>
+              <span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;background:${envColor}14;color:${envColor};border:1px solid ${envColor}26;font-family:'JetBrains Mono',monospace">${k.env || '—'}</span>
+            </div>
+          </div>
+        </div>
+        <button onclick="deleteApiKey('${k.id}')" class="btn-icon danger">
+          <i class="fa-solid fa-trash" style="font-size:11px"></i>
+        </button>
+      </div>
+      <div class="key-box">
+        <code>${k.key}</code>
+        <button class="key-copy-btn" onclick="copyText('${safeKey}',this)" title="Copy">
+          <i class="fa-solid fa-copy"></i>
+        </button>
+      </div>
+      <p style="font-size:13px;color:var(--text3);line-height:1.65;margin-bottom:16px">${k.description || '—'}</p>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--border)">
+        <span style="font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace">${k.created || '—'}</span>
+        <span style="font-size:10px;font-weight:700;padding:3px 9px;border-radius:6px;background:${meta.color}14;color:${meta.color}">${k.provider}</span>
+      </div>`;
+    grid.appendChild(div);
+  });
+}
+
+async function deleteApiKey(id) {
+  if (!confirm(Store.prefs.lang === 'id' ? 'Hapus key ini?' : 'Delete this key?')) return;
+  Store.apikeys = Store.apikeys.filter(k => k.id !== id);
+  await Store.persist();
+  renderApiKeys(); updateStats();
+}
+
+/* ════════════════════════════════════════════════
+   PROMISE-BASED MODAL PROMPTS
+════════════════════════════════════════════════ */
+
+/** Show password input modal; resolves with entered password or rejects on cancel */
+function promptPassword(title = 'Enter Password', subtitle = '') {
+  return new Promise((resolve, reject) => {
+    document.getElementById('pwdModalTitle').textContent = title;
+    document.getElementById('pwdModalSub').textContent   = subtitle;
+    document.getElementById('pwdInput').value = '';
+    document.getElementById('pwdModal').classList.add('open');
+
+    const form = document.getElementById('pwdForm');
+    const cancelBtn = document.getElementById('pwdModalCancel');
+
+    const cleanup = () => {
+      form.onsubmit = null;
+      cancelBtn.onclick = null;
+      document.getElementById('pwdModal').classList.remove('open');
+    };
+
+    form.onsubmit = e => {
+      e.preventDefault();
+      const pwd = document.getElementById('pwdInput').value;
+      cleanup();
+      resolve(pwd);
+    };
+
+    cancelBtn.onclick = () => {
+      cleanup();
+      reject(new Error('cancelled'));
+    };
+  });
+}
+
+/** Show merge-vs-replace modal; resolves with 'replace' | 'merge' or rejects on cancel */
+function promptImportMode(subtitle = '') {
+  return new Promise((resolve, reject) => {
+    document.getElementById('importModeSub').textContent = subtitle;
+    document.getElementById('importModeModal').classList.add('open');
+
+    const cleanup = () => document.getElementById('importModeModal').classList.remove('open');
+
+    document.getElementById('importModeReplace').onclick = () => { cleanup(); resolve('replace'); };
+    document.getElementById('importModeMerge').onclick   = () => { cleanup(); resolve('merge'); };
+    document.getElementById('importModeCancel').onclick  = () => { cleanup(); reject(new Error('cancelled')); };
+  });
+}
+
+/* ════════════════════════════════════════════════
+   MODAL: ADD ACCOUNT  (form handlers)
+════════════════════════════════════════════════ */
+function openAddAccount() {
+  selFamily = null; selStatus = 'Active'; selSub = 'Free';
+  selCat = Object.keys(CATS)[0]; pendingModels = []; pendingTags = [];
+
+  document.getElementById('addAccForm').reset();
+  document.getElementById('ac-status-v').value = 'Active';
+  document.getElementById('ac-family-v').value = '';
+  document.getElementById('ac-sub-v').value    = 'Free';
+  document.getElementById('modelDetail').style.display       = 'none';
+  document.getElementById('pendingModelsArea').style.display = 'none';
+  document.getElementById('pendingModelsList').innerHTML     = '';
+  document.getElementById('tagsList').innerHTML              = '';
+
+  buildCatTabs(); buildFamGrid();
+  resetSubBtns(); resetStatusBtns();
+  document.getElementById('stb-active').classList.add('st-active');
+  document.getElementById('addModal').classList.add('open');
+}
+
+function buildCatTabs() {
+  const el = document.getElementById('catTabs');
+  el.innerHTML = '';
+  Object.entries(CATS).forEach(([cat, meta]) => {
+    const btn    = document.createElement('button');
+    btn.type     = 'button';
+    btn.className = 'cat-tab' + (cat === selCat ? ' sel' : '');
+    btn.innerHTML = `${meta.icon} ${cat}`;
+    btn.onclick   = () => pickCat(cat);
+    el.appendChild(btn);
+  });
+  const customCats = [...new Set(Store.customFamilies.map(f => f.cat).filter(c => !CATS[c]))];
+  customCats.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'cat-tab'; btn.textContent = '✨ ' + cat;
+    btn.onclick = () => pickCat(cat);
+    el.appendChild(btn);
+  });
+}
+
+function pickCat(cat) {
+  selCat = cat;
+  document.querySelectorAll('#catTabs .cat-tab').forEach(b => {
+    b.classList.toggle('sel', b.textContent.trim().includes(cat));
+  });
+  buildFamGrid();
+}
+
+function buildFamGrid() {
+  const fams = getFamilies();
+  const el   = document.getElementById('famGrid');
+  el.innerHTML = '';
+  Object.entries(fams).filter(([, f]) => f.cat === selCat).forEach(([name, meta]) => {
+    const div    = document.createElement('div');
+    div.className = 'family-card' + (name === selFamily ? ' sel' : '');
+    div.onclick   = () => pickFamily(name, div);
+    const favicon = meta.domain ? `https://www.google.com/s2/favicons?domain=${meta.domain}&sz=64` : null;
+    div.innerHTML = favicon
+      ? `<img src="${favicon}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+         <div class="fam-icon" style="background:${meta.color}18;display:none"><i class='fa-solid fa-microchip' style='color:${meta.color};font-size:13px'></i></div>
+         <div class="fam-name">${name}</div>`
+      : `<div class="fam-icon" style="background:${meta.color}18"><span style="font-size:16px">${CATS[meta.cat]?.icon || '✨'}</span></div>
+         <div class="fam-name">${name}</div>`;
+    el.appendChild(div);
+  });
+}
+
+function pickFamily(name, el) {
+  document.querySelectorAll('#famGrid .family-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+  selFamily = name;
+  document.getElementById('ac-family-v').value = name;
+  const meta = getFamilies()[name];
+  const sel  = document.getElementById('ac-model');
+  sel.innerHTML = meta.models.map(m => `<option value="${m}">${m}</option>`).join('');
+  document.getElementById('modelDetail').style.display = '';
+  onModelSel();
+}
+
+function onModelSel() {
+  const v = document.getElementById('ac-model').value;
+  document.getElementById('customModelWrap').style.display = v === 'Custom...' ? '' : 'none';
+}
+
+function pickSub(s) {
+  selSub = s;
+  document.getElementById('ac-sub-v').value = s;
+  resetSubBtns();
+  document.getElementById('sb-' + s.toLowerCase()).classList.add({ Free:'sub-free', Plus:'sub-plus', Pro:'sub-pro' }[s]);
+}
+function resetSubBtns() { ['free','plus','pro'].forEach(s => document.getElementById('sb-' + s).className = 'sub-btn'); }
+
+function pickStatus(s) {
+  selStatus = s;
+  document.getElementById('ac-status-v').value = s;
+  resetStatusBtns();
+  document.getElementById('stb-' + s.toLowerCase()).classList.add({ Active:'st-active', Limit:'st-limit', Banned:'st-banned' }[s]);
+}
+function resetStatusBtns() { ['active','limit','banned'].forEach(s => document.getElementById('stb-' + s).className = 'status-btn'); }
+
+function addModelToList() {
+  if (!selFamily) return;
+  const mv    = document.getElementById('ac-model').value;
+  const cv    = document.getElementById('ac-model-custom').value.trim();
+  const model = mv === 'Custom...' ? (cv || 'Custom') : mv;
+  pendingModels.push({ cat: selCat, family: selFamily, model, sub: selSub });
+  renderPendingModels();
+  showToast('Model added ✓', 'info');
+}
+
+function renderPendingModels() {
+  const area = document.getElementById('pendingModelsArea');
+  const list = document.getElementById('pendingModelsList');
+  if (!pendingModels.length) { area.style.display = 'none'; return; }
+  area.style.display = '';
+  const fams = getFamilies();
+  list.innerHTML = pendingModels.map((m, i) => {
+    const meta   = fams[m.family] || { domain: null, color: '#8b5cf6' };
+    const subCls = m.sub === 'Pro' ? 'b-pro' : m.sub === 'Plus' ? 'b-plus' : 'b-free';
+    return `<span style="display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:8px;border:1px solid ${meta.color}30;background:${meta.color}11;font-size:11px;font-family:'JetBrains Mono',monospace;font-weight:700;color:${meta.color}">
+      ${meta.domain ? `<img src="https://www.google.com/s2/favicons?domain=${meta.domain}&sz=32" style="width:12px;height:12px;border-radius:3px">` : ''}
+      ${m.family} · ${m.model}
+      <span class="badge ${subCls}" style="padding:1px 5px;font-size:9px">${m.sub}</span>
+      <button type="button" onclick="removePending(${i})" style="background:none;border:none;cursor:pointer;color:${meta.color};opacity:.7;font-size:14px;line-height:1;padding:0">×</button>
+    </span>`;
+  }).join('');
+}
+function removePending(i) { pendingModels.splice(i, 1); renderPendingModels(); }
+
+function addTag() {
+  const inp = document.getElementById('ac-tag-input');
+  const v   = inp.value.trim();
+  if (v && !pendingTags.includes(v)) { pendingTags.push(v); renderTagsList(); }
+  inp.value = '';
+}
+function renderTagsList() {
+  document.getElementById('tagsList').innerHTML = pendingTags.map((tag, i) =>
+    `<span class="tag-chip">${tag}<button class="tag-rm" onclick="removeTag(${i})">×</button></span>`
+  ).join('');
+}
+function removeTag(i) { pendingTags.splice(i, 1); renderTagsList(); }
+
+document.getElementById('ac-tag-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); addTag(); }
+});
+
+document.getElementById('addAccForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  let models = [...pendingModels];
+  if (!models.length && selFamily) {
+    const mv = document.getElementById('ac-model').value;
+    const cv = document.getElementById('ac-model-custom').value.trim();
+    models.push({ cat: selCat, family: selFamily, model: mv === 'Custom...' ? (cv || 'Custom') : mv, sub: selSub });
+  }
+  if (!models.length) { showToast(Store.prefs.lang === 'id' ? 'Pilih minimal 1 model' : 'Select at least 1 model', 'err'); return; }
+
+  Store.accounts.unshift({
+    id:          'a' + Date.now(),
+    email:       document.getElementById('ac-email').value,
+    password:    document.getElementById('ac-pass').value,
+    status:      document.getElementById('ac-status-v').value,
+    pinned:      false,
+    tags:        [...pendingTags],
+    description: document.getElementById('ac-desc').value,
+    ai_models:   models
+  });
+  await Store.persist();
+  renderAccounts(); updateStats();
+  closeModal('addModal'); go('accounts');
+  showToast(t('toast_saved'));
+});
+
+/* ════════════════════════════════════════════════
+   MODAL: ADD API KEY
+════════════════════════════════════════════════ */
+function openAddApi() {
+  selProvider = null;
+  document.getElementById('addApiForm').reset();
+  document.getElementById('api-prov-v').value = '';
+  const grid = document.getElementById('provGrid');
+  grid.innerHTML = '';
+  Object.entries(PROVIDERS).forEach(([name, meta]) => {
+    const div   = document.createElement('div');
+    div.className = 'prov-card';
+    div.onclick = () => {
+      document.querySelectorAll('#provGrid .prov-card').forEach(c => c.classList.remove('sel'));
+      div.classList.add('sel');
+      selProvider = name;
+      document.getElementById('api-prov-v').value = name;
+    };
+    const favicon = meta.domain ? `https://www.google.com/s2/favicons?domain=${meta.domain}&sz=64` : null;
+    div.innerHTML = favicon
+      ? `<img src="${favicon}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+         <div class="prov-icon" style="background:${meta.color}18;display:none"><i class='fa-solid fa-key' style='color:${meta.color};font-size:12px'></i></div>
+         <div class="pn">${name}</div>`
+      : `<div class="prov-icon" style="background:${meta.color}18"><i class='fa-solid fa-key' style='color:${meta.color};font-size:12px'></i></div>
+         <div class="pn">${name}</div>`;
+    grid.appendChild(div);
+  });
+  document.getElementById('addApiModal').classList.add('open');
+}
+
+document.getElementById('addApiForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  Store.apikeys.unshift({
+    id:          'k' + Date.now(),
+    provider:    selProvider || 'Lainnya',
+    label:       document.getElementById('api-label').value,
+    env:         document.getElementById('api-env').value,
+    key:         document.getElementById('api-key').value,
+    description: document.getElementById('api-desc').value,
+    created:     new Date().toISOString().split('T')[0]
+  });
+  await Store.persist();
+  renderApiKeys(); updateStats();
+  closeModal('addApiModal'); go('apikeys');
+  showToast(t('toast_saved'));
+});
+
+/* ════════════════════════════════════════════════
+   EXPORT MODAL
+════════════════════════════════════════════════ */
+function openExportModal() {
+  document.getElementById('exportEncryptToggle').checked = false;
+  document.getElementById('exportPasswordFields').style.display = 'none';
+  document.getElementById('exportPwd').value = '';
+  document.getElementById('exportPwdConfirm').value = '';
+  document.getElementById('exportSummary').textContent =
+    `Vault: ${Store.accounts.length} account(s), ${Store.apikeys.length} API key(s), ${Store.customFamilies.length} custom famil(ies).`;
+  document.getElementById('exportModal').classList.add('open');
+}
+
+function toggleExportPassword() {
+  const on = document.getElementById('exportEncryptToggle').checked;
+  document.getElementById('exportPasswordFields').style.display = on ? 'flex' : 'none';
+}
+
+/* ════════════════════════════════════════════════
+   SETTINGS: CUSTOM FAMILIES
+════════════════════════════════════════════════ */
+function renderCustomFamilyList() {
+  const el = document.getElementById('customFamilyList');
+  if (!el) return;
+  if (!Store.customFamilies.length) {
+    el.innerHTML = `<p style="font-size:12px;color:var(--text3)">${Store.prefs.lang === 'id' ? 'Belum ada family custom.' : 'No custom families yet.'}</p>`;
+    return;
+  }
+  el.innerHTML = Store.customFamilies.map((f, i) =>
+    `<span class="tag-chip" style="border-color:${f.color||'#8b5cf6'}30;color:${f.color||'#8b5cf6'};background:${f.color||'#8b5cf6'}11;padding:5px 10px;font-size:11px">
+      ${f.name} <span style="opacity:.5">· ${f.cat}</span>
+      <button class="tag-rm" onclick="removeCustomFamily(${i})">×</button>
+    </span>`
+  ).join('');
+}
+
+async function addCustomFamily() {
+  const name = document.getElementById('new-fam-name').value.trim();
+  const cat  = document.getElementById('new-fam-cat').value;
+  const raw  = document.getElementById('new-fam-models').value;
+  if (!name) { showToast(Store.prefs.lang === 'id' ? 'Nama wajib diisi' : 'Name is required', 'err'); return; }
+  const models = [...new Set([...raw.split(',').map(s => s.trim()).filter(Boolean), 'Custom...'])];
+  Store.customFamilies.push({ name, cat, models });
+  document.getElementById('new-fam-name').value   = '';
+  document.getElementById('new-fam-models').value = '';
+  await Store.persist();
+  renderCustomFamilyList();
+  showToast(t('toast_saved'));
+}
+
+async function removeCustomFamily(i) {
+  Store.customFamilies.splice(i, 1);
+  await Store.persist();
+  renderCustomFamilyList();
+}
+
+async function confirmClearData() {
+  const msg = Store.prefs.lang === 'id'
+    ? 'Reset seluruh vault? Data tidak dapat dikembalikan!'
+    : 'Reset the entire vault? This cannot be undone!';
+  if (!confirm(msg)) return;
+  Store.accounts = []; Store.apikeys = []; Store.customFamilies = [];
+  await Store.persist();
+  renderAll(); showToast(t('toast_cleared'), 'info');
+}
+
+/* ════════════════════════════════════════════════
+   MODAL UTIL
+════════════════════════════════════════════════ */
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+/* ════════════════════════════════════════════════
+   RENDER ALL  —  called after any data change
+════════════════════════════════════════════════ */
+function renderAll() {
+  updateStats();
+  renderBreakdown();
+  renderAccounts();
+  renderApiKeys();
+  renderCustomFamilyList();
+  updateCatFilter();
+  applyTheme(Store.prefs.theme);
+  applyLang(Store.prefs.lang);
+}
+
+/* ════════════════════════════════════════════════
+   MODULE: APP  —  lifecycle
+════════════════════════════════════════════════ */
+const App = {
+  async init() {
+    try {
+      await DB.init();
+    } catch (err) {
+      // IndexedDB unavailable (private browsing on some browsers)
+      console.warn('IndexedDB unavailable, using memory only:', err.message);
+      showToast('IndexedDB unavailable — data will not persist', 'err');
+      this.showApp();
+      renderAll();
+      return;
+    }
+
+    const raw = await DB.load();
+
+    if (!raw) {
+      // First launch
+      this.showOnboarding();
+    } else {
+      Store.hydrate(raw);
+      this.showApp();
+      renderAll();
+    }
+  },
+
+  showOnboarding() {
+    document.getElementById('screen-onboarding').style.display = 'flex';
+    document.getElementById('screen-app').style.display        = 'none';
+    // Apply default theme/lang to onboarding screen
+    applyTheme(Store.prefs.theme);
+    applyLang(Store.prefs.lang);
+  },
+
+  showApp() {
+    document.getElementById('screen-onboarding').style.display = 'none';
+    document.getElementById('screen-app').style.display        = 'flex';
+  },
+
+  async createNewVault() {
+    // Start with empty vault, persist to mark DB as initialized
+    await Store.persist();
+    this.showApp();
+    renderAll();
+    loadNews();
+    loadTips();
+  }
+};
+
+/* ════════════════════════════════════════════════
+   PWA: SERVICE WORKER REGISTRATION
+════════════════════════════════════════════════ */
+if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js', { scope: './' })
+      .then(() => console.info('[TERNAKAI] Service Worker registered'))
+      .catch(err => console.warn('[TERNAKAI] SW registration failed:', err));
+  });
+}
+
+/* ════════════════════════════════════════════════
+   BOOT
+════════════════════════════════════════════════ */
+App.init()
+  .then(() => {
+    if (document.getElementById('screen-app').style.display !== 'none') {
+      loadNews();
+      loadTips();
+    }
+  })
+  .catch(err => {
+    console.error('[TERNAKAI] Boot failed:', err);
+    showToast('App failed to initialize: ' + err.message, 'err');
+  });
+</script>
+</body>
+</html>
